@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {ForwardedRef, forwardRef} from 'react';
 import {
   Dimensions,
   StyleSheet,
@@ -17,34 +17,35 @@ interface IInputFieldProps extends TextInputProps {
 
 const deviceHeight = Dimensions.get('screen').height;
 
-const InputField = ({
-  disabled = false,
-  error,
-  blured = false,
-  ...props
-}: IInputFieldProps) => {
-  return (
-    <View>
-      <View
-        style={[
-          styles.container,
-          disabled && styles.disabled,
-          blured && !!error && styles.inputError,
-        ]}>
-        <TextInput
-          editable={!disabled}
-          placeholderTextColor={colors.GRAY_500}
-          style={[styles.input, disabled && styles.disabled]}
-          autoCapitalize="none"
-          spellCheck={false}
-          autoCorrect={false}
-          {...props}
-        />
+const InputField = forwardRef(
+  (
+    {disabled = false, error, blured = false, ...props}: IInputFieldProps,
+    ref?: ForwardedRef<TextInput>,
+  ) => {
+    return (
+      <View>
+        <View
+          style={[
+            styles.container,
+            disabled && styles.disabled,
+            blured && !!error && styles.inputError,
+          ]}>
+          <TextInput
+            ref={ref}
+            editable={!disabled}
+            placeholderTextColor={colors.GRAY_500}
+            style={[styles.input, disabled && styles.disabled]}
+            autoCapitalize="none"
+            spellCheck={false}
+            autoCorrect={false}
+            {...props}
+          />
+        </View>
+        {blured && !!error && <Text style={styles.error}>{error}</Text>}
       </View>
-      {blured && !!error && <Text style={styles.error}>{error}</Text>}
-    </View>
-  );
-};
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   container: {

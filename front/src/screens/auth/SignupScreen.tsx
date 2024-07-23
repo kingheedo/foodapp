@@ -1,11 +1,13 @@
-import React from 'react';
-import {SafeAreaView, StyleSheet, View} from 'react-native';
+import React, {useRef} from 'react';
+import {SafeAreaView, StyleSheet, TextInput, View} from 'react-native';
 import InputField from '../../components/InputField';
 import useForm from '../../hooks/useForm';
 import CustomButton from '../../components/CustomButton';
 import {validateSignup} from '../../utils';
 
 const SignupScreen = () => {
+  const passwordRef = useRef<TextInput | null>(null);
+  const passwordConfirmRef = useRef<TextInput | null>(null);
   const {inputValues, blured, errors, getFormInputProps} = useForm({
     initialValue: {
       email: '',
@@ -23,24 +25,36 @@ const SignupScreen = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.inputContainer}>
         <InputField
+          autoFocus
           inputMode="email"
           placeholder="이메일"
           error={errors.email}
           blured={blured.email}
+          returnKeyType="next"
+          blurOnSubmit={false}
+          onSubmitEditing={() => passwordRef.current?.focus()}
           {...getFormInputProps('email')}
         />
         <InputField
+          ref={passwordRef}
           secureTextEntry
           placeholder="비밀번호"
+          textContentType="oneTimeCode"
           error={errors.password}
           blured={blured.password}
+          returnKeyType="next"
+          blurOnSubmit={false}
+          onSubmitEditing={() => passwordConfirmRef.current?.focus()}
           {...getFormInputProps('password')}
         />
         <InputField
+          ref={passwordConfirmRef}
           secureTextEntry
           placeholder="비밀번호 확인"
+          textContentType="oneTimeCode"
           error={errors.passwordConfirm}
           blured={blured.passwordConfirm}
+          onSubmitEditing={handleSubmit}
           {...getFormInputProps('passwordConfirm')}
         />
       </View>
