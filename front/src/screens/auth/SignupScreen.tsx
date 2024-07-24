@@ -4,10 +4,12 @@ import InputField from '../../components/InputField';
 import useForm from '../../hooks/useForm';
 import CustomButton from '../../components/CustomButton';
 import {validateSignup} from '../../utils';
+import useAuth from '../../hooks/queries/useAuth';
 
 const SignupScreen = () => {
   const passwordRef = useRef<TextInput | null>(null);
   const passwordConfirmRef = useRef<TextInput | null>(null);
+  const {loginMutation, signupMutation} = useAuth();
   const {inputValues, blured, errors, getFormInputProps} = useForm({
     initialValue: {
       email: '',
@@ -18,7 +20,23 @@ const SignupScreen = () => {
   });
 
   const handleSubmit = () => {
-    console.log(inputValues);
+    const {email, password} = inputValues;
+    signupMutation.mutate(
+      {
+        email,
+        password,
+      },
+      {
+        onSuccess: () =>
+          loginMutation.mutate({
+            email,
+            password,
+          }),
+        onError: error => {
+          console.log('error', error.response?.data);
+        },
+      },
+    );
   };
 
   return (
