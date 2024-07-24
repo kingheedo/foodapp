@@ -1,5 +1,5 @@
 const queryKeys = {
-  Auth: 'auth',
+  AUTH: 'auth',
   GET_ACCESS_TOKEN: 'getAccessToken',
   GET_PROFILE: 'getProfile',
 };

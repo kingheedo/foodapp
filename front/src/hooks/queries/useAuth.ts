@@ -27,12 +27,12 @@ const useLogin = (mutationOptions?: UseMutationCustomOptions) => {
       setEncryptedStorage(storageKeys.REFRESH_TOKEN, refreshToken);
       setHeader('Authorization', `Bearer ${accessToken}`);
     },
-    onSettled: (mutationOptions?: UseMutationCustomOptions) => {
+    onSettled: () => {
       queryClient.refetchQueries({
-        queryKey: [queryKeys.Auth, queryKeys.GET_ACCESS_TOKEN],
+        queryKey: [queryKeys.AUTH, queryKeys.GET_ACCESS_TOKEN],
       });
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.Auth, queryKeys.GET_PROFILE],
+        queryKey: [queryKeys.AUTH, queryKeys.GET_PROFILE],
       });
     },
     ...mutationOptions,
@@ -48,7 +48,7 @@ const useLogout = (mutationOptions?: UseMutationCustomOptions) => {
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.Auth],
+        queryKey: [queryKeys.AUTH],
       });
     },
     ...mutationOptions,
@@ -57,7 +57,7 @@ const useLogout = (mutationOptions?: UseMutationCustomOptions) => {
 
 const useGetRefreshToken = () => {
   const {isSuccess, isError, data} = useQuery({
-    queryKey: [queryKeys.Auth, queryKeys.GET_ACCESS_TOKEN],
+    queryKey: [queryKeys.AUTH, queryKeys.GET_ACCESS_TOKEN],
     queryFn: getAccessToken,
     staleTime: 1000 * 60 * 27, // 27분
     refetchInterval: 1000 * 60 * 27, // 27분
@@ -84,7 +84,7 @@ const useGetRefreshToken = () => {
 
 const useGetProfile = (queryOption?: UseQueryCustomOptions) => {
   return useQuery({
-    queryKey: [queryKeys.Auth, queryKeys.GET_PROFILE],
+    queryKey: [queryKeys.AUTH, queryKeys.GET_PROFILE],
     queryFn: getProfile,
     ...queryOption,
   });
