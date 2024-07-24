@@ -1,5 +1,5 @@
-import {Category, Profile} from '../../types/domain';
-import {getEncryptedStorage} from '../utils';
+import {Category, Profile} from '@/types/domain';
+import {getEncryptedStorage} from '@/utils';
 import axiosInstance from './axios';
 
 type RequestUser = {

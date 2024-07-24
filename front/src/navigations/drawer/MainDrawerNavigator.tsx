@@ -1,9 +1,9 @@
+import {mainNavigations} from '@/constants';
+import CalendarHomeScreen from '@/screens/calendar/CalendarHomeScreen';
+import FeedHomeScreen from '@/screens/feed/FeedHomeScreen';
+import MapHomeScreen from '@/screens/map/MapHomeScreen';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import React from 'react';
-import {mainNavigations} from '../../constants';
-import MapHomeScreen from '../../screens/map/MapHomeScreen';
-import FeedHomeScreen from '../../screens/feed/FeedHomeScreen';
-import CalendarHomeScreen from '../../screens/calendar/CalendarHomeScreen';
 
 const Drawer = createDrawerNavigator();
 const MainDrawerNavigator = () => {
