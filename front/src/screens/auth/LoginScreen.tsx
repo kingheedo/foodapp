@@ -5,9 +5,11 @@ import CustomButton from '../../components/CustomButton';
 import useForm from '../../hooks/useForm';
 import {validateLogin} from '../../utils';
 import {TextInput} from 'react-native-gesture-handler';
+import useAuth from '../../hooks/queries/useAuth';
 
 const LoginScreen = () => {
   const passwordRef = useRef<TextInput | null>(null);
+  const {loginMutation} = useAuth();
   const {inputValues, blured, errors, getFormInputProps} = useForm({
     initialValue: {
       email: '',
@@ -18,7 +20,7 @@ const LoginScreen = () => {
 
   /** 폼 제춣 핸들러 */
   const handleSubmit = () => {
-    console.log(inputValues);
+    loginMutation.mutate(inputValues);
   };
 
   return (

@@ -1,4 +1,4 @@
-import EncryptedStorage from 'react-native-encrypted-storage/lib/typescript/EncryptedStorage';
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 const setEncryptedStorage = async <T>(key: string, data: T) => {
   try {
