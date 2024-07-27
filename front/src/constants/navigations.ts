@@ -5,9 +5,13 @@ const authNavigations = {
 } as const;
 
 const mainNavigations = {
-  MAP_HOME: 'MapHome',
-  FEED_HOME: 'FeedHome',
-  CALENDAR_HOME: 'CalendarHome',
+  HOME: 'Home',
+  FEED: 'Feed',
+  CALENDAR: 'Calendar',
 } as const;
 
-export {authNavigations, mainNavigations};
+const mapNavigations = {
+  MAP_HOME: 'MapHome',
+} as const;
+
+export {authNavigations, mainNavigations, mapNavigations};
