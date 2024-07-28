@@ -1,7 +1,13 @@
-import React, {useRef} from 'react';
-import {Pressable, StyleSheet, View} from 'react-native';
+import React, {useRef, useState} from 'react';
+import {Pressable, StyleSheet, Text, View} from 'react-native';
 import useAuth from '@/hooks/queries/useAuth';
-import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+import MapView, {
+  Callout,
+  LatLng,
+  LongPressEvent,
+  Marker,
+  PROVIDER_GOOGLE,
+} from 'react-native-maps';
 import {colors} from '@/constants';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -14,6 +20,7 @@ import usePermission, {PermissionType} from '@/hooks/usePermission';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import mapStyle from '@/styles/mapStyle';
+import CustomMarker from '@/components/CustomMarker';
 
 type Navigation = CompositeNavigationProp<
   StackNavigationProp<MapStackParamList>,
@@ -26,6 +33,7 @@ const MapHomeScreen = () => {
   const navigation = useNavigation<Navigation>();
   const {logoutMutation} = useAuth();
   const {userLocation, isLocationError} = useUserLocation();
+  const [pressLocation, setPressLocation] = useState<LatLng>();
   usePermission(PermissionType.LOCATION);
 
   const handlePressLocation = () => {
@@ -41,23 +49,30 @@ const MapHomeScreen = () => {
     });
   };
 
+  const handleLongPressMapView = ({nativeEvent}: LongPressEvent) => {
+    console.log('handleLongPressMapView');
+
+    setPressLocation(nativeEvent.coordinate);
+  };
+
+  console.log('pressLocation', pressLocation);
+
   return (
-    <View style={styles.container}>
+    <>
       <MapView
         ref={mapRef}
-        initialRegion={{
-          latitude: 37.566535,
-          longitude: 126.9779692,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
-        style={styles.map}
-        customMapStyle={mapStyle}
+        style={styles.container}
         provider={PROVIDER_GOOGLE}
-        showsUserLocation={true}
-        followsUserLocation={true}
+        showsUserLocation
+        followsUserLocation
         showsMyLocationButton={false}
-      />
+        customMapStyle={mapStyle}
+        onLongPress={handleLongPressMapView}>
+        {pressLocation && (
+          <CustomMarker color="RED" coordinate={pressLocation} />
+        )}
+      </MapView>
+
       <Pressable
         style={[styles.drawerButton, {top: inset.top || 20}]}
         onPress={() => navigation.openDrawer()}>
@@ -68,7 +83,7 @@ const MapHomeScreen = () => {
           <MaterialIcons name="my-location" color={colors.WHITE} size={25} />
         </Pressable>
       </View>
-    </View>
+    </>
   );
 };
 
