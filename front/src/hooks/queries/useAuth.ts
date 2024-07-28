@@ -5,6 +5,7 @@ import {
   postLogin,
   postLogout,
   postSignup,
+  ResponseProfile,
 } from '@/api/auth';
 import {UseMutationCustomOptions, UseQueryCustomOptions} from '@/types/common';
 import {removeEncryptedStorage, setEncryptedStorage} from '@/utils';
@@ -82,7 +83,9 @@ const useGetRefreshToken = () => {
   return {isSuccess, isError};
 };
 
-const useGetProfile = (queryOption?: UseQueryCustomOptions) => {
+const useGetProfile = (
+  queryOption?: UseQueryCustomOptions<ResponseProfile>,
+) => {
   return useQuery({
     queryKey: [queryKeys.AUTH, queryKeys.GET_PROFILE],
     queryFn: getProfile,

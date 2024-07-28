@@ -1,5 +1,5 @@
 import React, {useRef} from 'react';
-import {Pressable, StyleSheet, Text, View} from 'react-native';
+import {Pressable, StyleSheet, View} from 'react-native';
 import useAuth from '@/hooks/queries/useAuth';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import {colors} from '@/constants';
@@ -13,6 +13,7 @@ import useUserLocation from '@/hooks/useUserLocation';
 import usePermission, {PermissionType} from '@/hooks/usePermission';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import mapStyle from '@/styles/mapStyle';
 
 type Navigation = CompositeNavigationProp<
   StackNavigationProp<MapStackParamList>,
@@ -51,6 +52,7 @@ const MapHomeScreen = () => {
           longitudeDelta: 0.0421,
         }}
         style={styles.map}
+        customMapStyle={mapStyle}
         provider={PROVIDER_GOOGLE}
         showsUserLocation={true}
         followsUserLocation={true}
