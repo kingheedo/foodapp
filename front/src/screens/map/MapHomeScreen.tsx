@@ -1,6 +1,5 @@
 import React, {useRef, useState} from 'react';
-import {Pressable, StyleSheet, Text, View} from 'react-native';
-import useAuth from '@/hooks/queries/useAuth';
+import {Alert, Pressable, StyleSheet, Text, View} from 'react-native';
 import MapView, {
   Callout,
   LatLng,
@@ -8,7 +7,7 @@ import MapView, {
   Marker,
   PROVIDER_GOOGLE,
 } from 'react-native-maps';
-import {colors} from '@/constants';
+import {colors, mapNavigations} from '@/constants';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
@@ -21,6 +20,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import mapStyle from '@/styles/mapStyle';
 import CustomMarker from '@/components/CustomMarker';
+import {alerts} from '@/constants/messages';
 
 type Navigation = CompositeNavigationProp<
   StackNavigationProp<MapStackParamList>,
@@ -31,12 +31,15 @@ const MapHomeScreen = () => {
   const mapRef = useRef<MapView | null>(null);
   const inset = useSafeAreaInsets();
   const navigation = useNavigation<Navigation>();
-  const {logoutMutation} = useAuth();
   const {userLocation, isLocationError} = useUserLocation();
-  const [pressLocation, setPressLocation] = useState<LatLng>();
+  const [selectedLocation, setSelectedLocation] = useState<LatLng | null>(null);
   usePermission(PermissionType.LOCATION);
 
-  const handlePressLocation = () => {
+  const handleLongPressMapView = ({nativeEvent}: LongPressEvent) => {
+    setSelectedLocation(nativeEvent.coordinate);
+  };
+
+  const handleselectedLocation = () => {
     if (isLocationError) {
       return;
     }
@@ -49,13 +52,19 @@ const MapHomeScreen = () => {
     });
   };
 
-  const handleLongPressMapView = ({nativeEvent}: LongPressEvent) => {
-    console.log('handleLongPressMapView');
+  const handleAddLocation = () => {
+    if (selectedLocation === null) {
+      return Alert.alert(
+        alerts.NOT_SELECTED_LOCATION.title,
+        alerts.NOT_SELECTED_LOCATION.description,
+      );
+    }
 
-    setPressLocation(nativeEvent.coordinate);
+    navigation.navigate(mapNavigations.ADD_POST, {
+      location: selectedLocation,
+    });
+    setSelectedLocation(null);
   };
-
-  console.log('pressLocation', pressLocation);
 
   return (
     <>
@@ -63,13 +72,19 @@ const MapHomeScreen = () => {
         ref={mapRef}
         style={styles.container}
         provider={PROVIDER_GOOGLE}
+        initialRegion={{
+          latitude: 37.566535,
+          longitude: 126.9779692,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
         showsUserLocation
         followsUserLocation
         showsMyLocationButton={false}
         customMapStyle={mapStyle}
         onLongPress={handleLongPressMapView}>
-        {pressLocation && (
-          <CustomMarker color="RED" coordinate={pressLocation} />
+        {selectedLocation && (
+          <CustomMarker color="RED" coordinate={selectedLocation} />
         )}
       </MapView>
 
@@ -79,7 +94,10 @@ const MapHomeScreen = () => {
         <Ionicons name="menu" color={colors.WHITE} size={25} />
       </Pressable>
       <View style={styles.buttonList}>
-        <Pressable style={styles.mapButton} onPress={handlePressLocation}>
+        <Pressable style={styles.mapButton} onPress={handleAddLocation}>
+          <MaterialIcons name="add" color={colors.WHITE} size={25} />
+        </Pressable>
+        <Pressable style={styles.mapButton} onPress={handleselectedLocation}>
           <MaterialIcons name="my-location" color={colors.WHITE} size={25} />
         </Pressable>
       </View>
