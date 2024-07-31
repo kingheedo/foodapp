@@ -6,7 +6,7 @@ import {
   postLogout,
   postSignup,
   ResponseProfile,
-} from '@/api/auth';
+} from '@/api';
 import {UseMutationCustomOptions, UseQueryCustomOptions} from '@/types/common';
 import {removeEncryptedStorage, setEncryptedStorage} from '@/utils';
 import {removeHeader, setHeader} from '@/utils/header';

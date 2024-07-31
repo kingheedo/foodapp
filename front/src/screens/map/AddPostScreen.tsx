@@ -1,11 +1,12 @@
 import CustomButton from '@/components/CustomButton';
+import HeaderButton from '@/components/HeaderButton';
 import InputField from '@/components/InputField';
 import {colors, mapNavigations} from '@/constants';
 import useForm from '@/hooks/useForm';
 import {MapStackParamList} from '@/navigations/stack/MapStackNavigator';
 import {validateAddPost} from '@/utils';
 import {StackScreenProps} from '@react-navigation/stack';
-import React, {useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {ScrollView, StyleSheet, TextInput, View} from 'react-native';
 import {SafeAreaView} from 'react-native';
 import Octicons from 'react-native-vector-icons/Octicons';
@@ -15,16 +16,33 @@ type AddPostScreenProps = StackScreenProps<
   typeof mapNavigations.ADD_POST
 >;
 
-const AddPostScreen = ({route}: AddPostScreenProps) => {
+const AddPostScreen = ({navigation, route}: AddPostScreenProps) => {
   const {location} = route.params;
   const descriptionRef = useRef<TextInput | null>(null);
-  const {inputValues, getFormInputProps, errors, blured} = useForm({
+  const {getFormInputProps, errors, blured} = useForm({
     initialValue: {
       title: '',
       description: '',
     },
     validate: validateAddPost,
   });
+
+  const handleSubmtit = () => {
+    console.log('handleSubmtit');
+  };
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <HeaderButton
+          style={{marginRight: 18}}
+          label="등록"
+          onPress={handleSubmtit}
+        />
+      ),
+    });
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.contentContainer}>
