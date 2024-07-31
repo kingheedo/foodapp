@@ -1,13 +1,16 @@
 import CustomButton from '@/components/CustomButton';
 import HeaderButton from '@/components/HeaderButton';
 import InputField from '@/components/InputField';
-import {colors, mapNavigations} from '@/constants';
+import {colors, mapNavigations, queryKeys} from '@/constants';
+import useMutateCreatePost from '@/hooks/queries/useMutateCreatePost';
 import useForm from '@/hooks/useForm';
 import {MapStackParamList} from '@/navigations/stack/MapStackNavigator';
+import {MarkerColor} from '@/types/domain';
 import {validateAddPost} from '@/utils';
 import {StackScreenProps} from '@react-navigation/stack';
-import React, {useEffect, useRef} from 'react';
-import {ScrollView, StyleSheet, TextInput, View} from 'react-native';
+import {useQueryClient} from '@tanstack/react-query';
+import React, {useEffect, useRef, useState} from 'react';
+import {Alert, ScrollView, StyleSheet, TextInput, View} from 'react-native';
 import {SafeAreaView} from 'react-native';
 import Octicons from 'react-native-vector-icons/Octicons';
 
@@ -19,16 +22,39 @@ type AddPostScreenProps = StackScreenProps<
 const AddPostScreen = ({navigation, route}: AddPostScreenProps) => {
   const {location} = route.params;
   const descriptionRef = useRef<TextInput | null>(null);
-  const {getFormInputProps, errors, blured} = useForm({
+  const addPostForm = useForm({
     initialValue: {
       title: '',
       description: '',
     },
     validate: validateAddPost,
   });
+  const [address, setAddress] = useState('');
+  const [markerColor, setMarkerColor] = useState<MarkerColor>('RED');
+  const [score, setScore] = useState(5);
+  const createPost = useMutateCreatePost();
+  const queryClient = useQueryClient();
 
   const handleSubmtit = () => {
-    console.log('handleSubmtit');
+    const body = {
+      title: addPostForm.inputValues.title,
+      description: addPostForm.inputValues.description,
+      address,
+      date: new Date(),
+      imageUris: [],
+      color: markerColor,
+      score,
+      ...location,
+    };
+
+    createPost.mutate(body, {
+      onSuccess: () => {
+        navigation.goBack();
+      },
+      onError: () => {
+        Alert.alert('장소 추가에 실패하였습니다.');
+      },
+    });
   };
 
   useEffect(() => {
@@ -41,7 +67,7 @@ const AddPostScreen = ({navigation, route}: AddPostScreenProps) => {
         />
       ),
     });
-  }, []);
+  }, [addPostForm.inputValues, markerColor, location]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -60,18 +86,18 @@ const AddPostScreen = ({navigation, route}: AddPostScreenProps) => {
             placeholder="제목을 입력해주세요"
             returnKeyType="next"
             onSubmitEditing={() => descriptionRef.current?.focus()}
-            error={errors.title}
-            {...getFormInputProps('title')}
-            blured={blured.title}
+            error={addPostForm.errors.title}
+            {...addPostForm.getFormInputProps('title')}
+            blured={addPostForm.blured.title}
           />
           <InputField
             ref={descriptionRef}
             placeholder="기록하고 싶은 내용을 입력하세요 (선택)"
             returnKeyType="next"
-            error={errors.description}
-            blured={blured.description}
+            error={addPostForm.errors.description}
+            blured={addPostForm.blured.description}
             multiline
-            {...getFormInputProps('description')}
+            {...addPostForm.getFormInputProps('description')}
           />
         </View>
       </ScrollView>

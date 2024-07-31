@@ -21,6 +21,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import mapStyle from '@/styles/mapStyle';
 import CustomMarker from '@/components/CustomMarker';
 import {alerts} from '@/constants/messages';
+import useGetMarkers from '@/hooks/queries/useGetMarkers';
 
 type Navigation = CompositeNavigationProp<
   StackNavigationProp<MapStackParamList>,
@@ -34,6 +35,7 @@ const MapHomeScreen = () => {
   const {userLocation, isLocationError} = useUserLocation();
   const [selectedLocation, setSelectedLocation] = useState<LatLng | null>(null);
   usePermission(PermissionType.LOCATION);
+  const {data: markers = []} = useGetMarkers();
 
   const handleLongPressMapView = ({nativeEvent}: LongPressEvent) => {
     setSelectedLocation(nativeEvent.coordinate);
@@ -83,6 +85,9 @@ const MapHomeScreen = () => {
         showsMyLocationButton={false}
         customMapStyle={mapStyle}
         onLongPress={handleLongPressMapView}>
+        {markers.map(({id, color, score, ...coordinate}) => (
+          <CustomMarker key={id} color={color} coordinate={coordinate} />
+        ))}
         {selectedLocation && (
           <CustomMarker color="RED" coordinate={selectedLocation} />
         )}

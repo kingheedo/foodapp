@@ -2,7 +2,7 @@ import {Post} from '@/types/domain';
 import axiosInstance from './axios';
 import {ImageUri} from 'types/domain';
 
-type RequsetCreatePost = Post & {imageUris: ImageUri[]};
+type RequsetCreatePost = Omit<Post, 'id'> & {imageUris: ImageUri[]};
 type ResponseCreatePost = Post & {imageUris: ImageUri[]};
 
 const createPost = async (
