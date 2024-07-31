@@ -1,4 +1,4 @@
-import React, {ForwardedRef, forwardRef} from 'react';
+import React, {ForwardedRef, forwardRef, ReactNode} from 'react';
 import {
   Dimensions,
   StyleSheet,
@@ -13,13 +13,20 @@ interface IInputFieldProps extends TextInputProps {
   disabled?: boolean;
   error?: string;
   blured?: boolean;
+  icon?: ReactNode;
 }
 
 const deviceHeight = Dimensions.get('screen').height;
 
 const InputField = forwardRef(
   (
-    {disabled = false, error, blured = false, ...props}: IInputFieldProps,
+    {
+      disabled = false,
+      error,
+      blured = false,
+      icon = null,
+      ...props
+    }: IInputFieldProps,
     ref?: ForwardedRef<TextInput>,
   ) => {
     return (
@@ -27,9 +34,12 @@ const InputField = forwardRef(
         <View
           style={[
             styles.container,
+            Boolean(icon) && styles.innerContainer,
+            props.multiline && styles.multiline,
             disabled && styles.disabled,
             blured && !!error && styles.inputError,
           ]}>
+          {icon}
           <TextInput
             ref={ref}
             editable={!disabled}
@@ -51,6 +61,15 @@ const styles = StyleSheet.create({
   container: {
     borderWidth: 1,
     borderColor: colors.GRAY_200,
+  },
+  innerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    gap: 5,
+  },
+  multiline: {
+    paddingBottom: deviceHeight > 700 ? 45 : 30,
   },
   input: {
     backgroundColor: colors.WHITE,

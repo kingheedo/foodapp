@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 
 interface IUseFormProps<T> {
   initialValue: T;
-  validate: (value: T) => Record<keyof T, string>;
+  validate?: (value: T) => Record<keyof T, string>;
 }
 
 const useForm = <T>({initialValue, validate}: IUseFormProps<T>) => {
@@ -35,8 +35,10 @@ const useForm = <T>({initialValue, validate}: IUseFormProps<T>) => {
   };
 
   useEffect(() => {
-    const newErrors = validate(inputValues);
-    setErrors(newErrors);
+    if (typeof validate === 'function') {
+      const newErrors = validate(inputValues);
+      setErrors(newErrors);
+    }
   }, [inputValues, validate]);
 
   return {inputValues, errors, blured, getFormInputProps};
