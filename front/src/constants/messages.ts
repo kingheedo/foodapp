@@ -1,3 +1,7 @@
+const errorMessages = {
+  CANNOT_GET_ADDRESS: '주소를 알 수 없습니다.',
+};
+
 const alerts = {
   NOT_SELECTED_LOCATION: {
     title: '추가할 위치를 선택해주세요.',
@@ -5,4 +9,4 @@ const alerts = {
   },
 };
 
-export {alerts};
+export {errorMessages, alerts};

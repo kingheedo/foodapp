@@ -1,14 +1,16 @@
 import CustomButton from '@/components/CustomButton';
 import HeaderButton from '@/components/HeaderButton';
 import InputField from '@/components/InputField';
-import {colors, mapNavigations, queryKeys} from '@/constants';
+import MarkerSelector from '@/components/MarkerSelector';
+import ScoreInput from '@/components/ScoreInput';
+import {colors, mapNavigations} from '@/constants';
 import useMutateCreatePost from '@/hooks/queries/useMutateCreatePost';
 import useForm from '@/hooks/useForm';
+import useGetAddress from '@/hooks/useGetAddress';
 import {MapStackParamList} from '@/navigations/stack/MapStackNavigator';
 import {MarkerColor} from '@/types/domain';
 import {validateAddPost} from '@/utils';
 import {StackScreenProps} from '@react-navigation/stack';
-import {useQueryClient} from '@tanstack/react-query';
 import React, {useEffect, useRef, useState} from 'react';
 import {Alert, ScrollView, StyleSheet, TextInput, View} from 'react-native';
 import {SafeAreaView} from 'react-native';
@@ -29,11 +31,10 @@ const AddPostScreen = ({navigation, route}: AddPostScreenProps) => {
     },
     validate: validateAddPost,
   });
-  const [address, setAddress] = useState('');
+  const address = useGetAddress(location);
   const [markerColor, setMarkerColor] = useState<MarkerColor>('RED');
   const [score, setScore] = useState(5);
   const createPost = useMutateCreatePost();
-  const queryClient = useQueryClient();
 
   const handleSubmtit = () => {
     const body = {
@@ -57,6 +58,14 @@ const AddPostScreen = ({navigation, route}: AddPostScreenProps) => {
     });
   };
 
+  const handleSelectMarker = (color: MarkerColor) => {
+    setMarkerColor(color);
+  };
+
+  const handleScore = (value: number) => {
+    setScore(value);
+  };
+
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -74,7 +83,7 @@ const AddPostScreen = ({navigation, route}: AddPostScreenProps) => {
       <ScrollView style={styles.contentContainer}>
         <View style={styles.inputContainer}>
           <InputField
-            value=""
+            value={address}
             disabled
             icon={
               <Octicons name="location" color={colors.GRAY_500} size={16} />
@@ -99,6 +108,11 @@ const AddPostScreen = ({navigation, route}: AddPostScreenProps) => {
             multiline
             {...addPostForm.getFormInputProps('description')}
           />
+          <MarkerSelector
+            markerColor={markerColor}
+            handleSelectMarker={handleSelectMarker}
+          />
+          <ScoreInput score={score} handleScore={handleScore} />
         </View>
       </ScrollView>
     </SafeAreaView>
