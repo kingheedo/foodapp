@@ -75,8 +75,7 @@ const MapHomeScreen = () => {
         style={styles.container}
         provider={PROVIDER_GOOGLE}
         initialRegion={{
-          latitude: 37.566535,
-          longitude: 126.9779692,
+          ...userLocation,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}

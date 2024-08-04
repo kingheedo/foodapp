@@ -9,4 +9,9 @@
 
 # Add any project specific keep options here:
 
+# react-native-config
 -keep class com.foodapp.BuildConfig { *; }
+
+# react-native-date-picker
+-keep public class net.time4j.android.ApplicationStarter
+-keep public class net.time4j.PrettyTime

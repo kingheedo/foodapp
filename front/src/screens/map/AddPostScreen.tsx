@@ -1,8 +1,13 @@
+import {Alert, ScrollView, StyleSheet, TextInput, View} from 'react-native';
+import {SafeAreaView} from 'react-native';
+import Octicons from 'react-native-vector-icons/Octicons';
 import CustomButton from '@/components/CustomButton';
+import DateInput from '@/components/DateInput';
 import HeaderButton from '@/components/HeaderButton';
 import InputField from '@/components/InputField';
 import MarkerSelector from '@/components/MarkerSelector';
 import ScoreInput from '@/components/ScoreInput';
+import PostImageField from '@/components/PostImageField';
 import {colors, mapNavigations} from '@/constants';
 import useMutateCreatePost from '@/hooks/queries/useMutateCreatePost';
 import useForm from '@/hooks/useForm';
@@ -12,9 +17,10 @@ import {MarkerColor} from '@/types/domain';
 import {validateAddPost} from '@/utils';
 import {StackScreenProps} from '@react-navigation/stack';
 import React, {useEffect, useRef, useState} from 'react';
-import {Alert, ScrollView, StyleSheet, TextInput, View} from 'react-native';
-import {SafeAreaView} from 'react-native';
-import Octicons from 'react-native-vector-icons/Octicons';
+import useModal from '@/hooks/useModal';
+import useDeviceImage from '@/hooks/useDeviceImage';
+import {format} from 'date-fns';
+import usePermission, {PermissionType} from '@/hooks/usePermission';
 
 type AddPostScreenProps = StackScreenProps<
   MapStackParamList,
@@ -34,15 +40,22 @@ const AddPostScreen = ({navigation, route}: AddPostScreenProps) => {
   const address = useGetAddress(location);
   const [markerColor, setMarkerColor] = useState<MarkerColor>('RED');
   const [score, setScore] = useState(5);
+  const [date, setDate] = useState<Date>(new Date());
+  const [isPickedDate, setIsPickedDate] = useState(false);
+  const {imageUris, handleImageLibrary, handleDelete, handleMove} =
+    useDeviceImage();
+  const datePickerModal = useModal();
+  usePermission(PermissionType.PHOTO);
+
   const createPost = useMutateCreatePost();
 
-  const handleSubmtit = () => {
+  const handleSubmit = () => {
     const body = {
       title: addPostForm.inputValues.title,
       description: addPostForm.inputValues.description,
       address,
       date: new Date(),
-      imageUris: [],
+      imageUris,
       color: markerColor,
       score,
       ...location,
@@ -56,6 +69,15 @@ const AddPostScreen = ({navigation, route}: AddPostScreenProps) => {
         Alert.alert('장소 추가에 실패하였습니다.');
       },
     });
+  };
+
+  const handleDate = (date: Date) => {
+    setDate(date);
+  };
+
+  const handleConfirmDate = () => {
+    setIsPickedDate(true);
+    datePickerModal.handleClose();
   };
 
   const handleSelectMarker = (color: MarkerColor) => {
@@ -72,7 +94,7 @@ const AddPostScreen = ({navigation, route}: AddPostScreenProps) => {
         <HeaderButton
           style={{marginRight: 18}}
           label="등록"
-          onPress={handleSubmtit}
+          onPress={handleSubmit}
         />
       ),
     });
@@ -89,7 +111,22 @@ const AddPostScreen = ({navigation, route}: AddPostScreenProps) => {
               <Octicons name="location" color={colors.GRAY_500} size={16} />
             }
           />
-          <CustomButton label="날짜 선택" variant="outlined" size="large" />
+          <CustomButton
+            label={
+              isPickedDate && !!date
+                ? format(date, 'yyyy. MM. dd')
+                : '날짜 선택'
+            }
+            variant="outlined"
+            size="large"
+            onPress={datePickerModal.handleOpen}
+          />
+          <DateInput
+            date={date}
+            open={datePickerModal.open}
+            handleDate={handleDate}
+            handleConfirm={handleConfirmDate}
+          />
 
           <InputField
             placeholder="제목을 입력해주세요"
@@ -113,6 +150,12 @@ const AddPostScreen = ({navigation, route}: AddPostScreenProps) => {
             handleSelectMarker={handleSelectMarker}
           />
           <ScoreInput score={score} handleScore={handleScore} />
+          <PostImageField
+            imageUris={imageUris}
+            handleImageLibrary={handleImageLibrary}
+            handleDelete={handleDelete}
+            handleMove={handleMove}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>
