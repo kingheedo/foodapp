@@ -60,7 +60,6 @@ const AddPostScreen = ({navigation, route}: AddPostScreenProps) => {
       score,
       ...location,
     };
-
     createPost.mutate(body, {
       onSuccess: () => {
         navigation.goBack();

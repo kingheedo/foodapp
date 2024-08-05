@@ -22,6 +22,8 @@ import mapStyle from '@/styles/mapStyle';
 import CustomMarker from '@/components/CustomMarker';
 import {alerts} from '@/constants/messages';
 import useGetMarkers from '@/hooks/queries/useGetMarkers';
+import MarkerModal from '@/components/MarkerModal';
+import useModal from '@/hooks/useModal';
 
 type Navigation = CompositeNavigationProp<
   StackNavigationProp<MapStackParamList>,
@@ -34,11 +36,18 @@ const MapHomeScreen = () => {
   const navigation = useNavigation<Navigation>();
   const {userLocation, isLocationError} = useUserLocation();
   const [selectedLocation, setSelectedLocation] = useState<LatLng | null>(null);
-  usePermission(PermissionType.LOCATION);
+  const [markerId, setMarkerId] = useState<number | null>(null);
   const {data: markers = []} = useGetMarkers();
+  const markerModal = useModal();
+  usePermission(PermissionType.LOCATION);
 
   const handleLongPressMapView = ({nativeEvent}: LongPressEvent) => {
     setSelectedLocation(nativeEvent.coordinate);
+  };
+
+  const handlePressMarker = (id: number) => {
+    setMarkerId(id);
+    markerModal.handleOpen();
   };
 
   const handleselectedLocation = () => {
@@ -85,12 +94,23 @@ const MapHomeScreen = () => {
         customMapStyle={mapStyle}
         onLongPress={handleLongPressMapView}>
         {markers.map(({id, color, score, ...coordinate}) => (
-          <CustomMarker key={id} color={color} coordinate={coordinate} />
+          <CustomMarker
+            key={id}
+            color={color}
+            coordinate={coordinate}
+            onPress={() => handlePressMarker(id)}
+          />
         ))}
         {selectedLocation && (
           <CustomMarker color="RED" coordinate={selectedLocation} />
         )}
       </MapView>
+
+      <MarkerModal
+        markerId={markerId}
+        visible={markerModal.open}
+        handleClose={markerModal.handleClose}
+      />
 
       <Pressable
         style={[styles.drawerButton, {top: inset.top || 20}]}

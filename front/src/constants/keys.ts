@@ -4,6 +4,8 @@ const queryKeys = {
   GET_PROFILE: 'getProfile',
   MARKER: 'MARKER',
   GET_MARKERS: 'GET_MARKERS',
+  POST: 'POST',
+  GET_POST: 'GET_POST',
 };
 
 const storageKeys = {

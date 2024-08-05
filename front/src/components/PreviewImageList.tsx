@@ -1,3 +1,4 @@
+import 'react-native-get-random-values';
 import {ImageUri} from '@/types/domain';
 import backUrl from '@/utils/backUrl';
 import React from 'react';
@@ -5,6 +6,7 @@ import {Image, Pressable, ScrollView, StyleSheet, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Octicons from 'react-native-vector-icons/Octicons';
 import {colors} from '@/constants';
+import {v4 as uuidv4} from 'uuid';
 
 interface PreviewImageListProps {
   imageUris: ImageUri[];
@@ -28,7 +30,7 @@ const PreviewImageList = ({
               <Ionicons name="close" size={16} color={colors.WHITE} />
             </Pressable>
             <Image
-              key={uri}
+              key={uuidv4()}
               style={styles.previewImage}
               resizeMode="cover"
               source={{uri: `${backUrl}/${uri}`}}
