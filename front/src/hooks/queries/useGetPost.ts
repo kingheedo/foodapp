@@ -1,7 +1,7 @@
 import {getPost, ResponseSinglePost} from '@/api';
 import {queryKeys} from '@/constants';
 import {useQuery} from '@tanstack/react-query';
-import {UseQueryCustomOptions} from 'types/common';
+import {UseQueryCustomOptions} from '@/types/common';
 
 const useGetPost = (
   id: number | null,

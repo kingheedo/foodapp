@@ -1,9 +1,7 @@
-import HeaderButton from '@/components/HeaderButton';
 import {mapNavigations} from '@/constants';
 import AddPostScreen from '@/screens/map/AddPostScreen';
 import MapHomeScreen from '@/screens/map/MapHomeScreen';
 import {createStackNavigator} from '@react-navigation/stack';
-import {Pressable, Text, View} from 'react-native';
 import {LatLng} from 'react-native-maps';
 
 // 전달하고자 파라미터가 없을떄는 undefined

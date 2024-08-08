@@ -15,4 +15,9 @@ const mapNavigations = {
   ADD_POST: 'AddPost',
 } as const;
 
-export {authNavigations, mainNavigations, mapNavigations};
+const feedNavigations = {
+  FEED_HOME: 'FeedHome',
+  FEED_DETAIL: 'FeedDetail',
+} as const;
+
+export {authNavigations, mainNavigations, mapNavigations, feedNavigations};
