@@ -3,7 +3,7 @@ import {ImageUri} from '@/types/domain';
 import React from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import PreviewImageList from './PreviewImageList';
+import PreviewImageList from '@/components/common/PreviewImageList';
 
 interface IPostImageFieldProps {
   imageUris: ImageUri[];
@@ -18,8 +18,6 @@ const PostImageField = ({
   handleDelete,
   handleMove,
 }: IPostImageFieldProps) => {
-  console.log('PostImageField', imageUris);
-
   return (
     <View style={styles.container}>
       <View style={[styles.addImage]}>
@@ -35,6 +33,7 @@ const PostImageField = ({
       </View>
       <PreviewImageList
         imageUris={imageUris}
+        showOption={true}
         handleDelete={handleDelete}
         handleMove={handleMove}
       />

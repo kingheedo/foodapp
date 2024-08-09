@@ -1,13 +1,8 @@
 import {Alert, ScrollView, StyleSheet, TextInput, View} from 'react-native';
 import {SafeAreaView} from 'react-native';
 import Octicons from 'react-native-vector-icons/Octicons';
-import CustomButton from '@/components/CustomButton';
-import DateInput from '@/components/DateInput';
-import HeaderButton from '@/components/HeaderButton';
-import InputField from '@/components/InputField';
-import MarkerSelector from '@/components/MarkerSelector';
-import ScoreInput from '@/components/ScoreInput';
-import PostImageField from '@/components/PostImageField';
+import DateInput from '@/components/post/DateInput';
+import ScoreInput from '@/components/post/ScoreInput';
 import {colors, mapNavigations} from '@/constants';
 import useMutateCreatePost from '@/hooks/queries/useMutateCreatePost';
 import useForm from '@/hooks/useForm';
@@ -21,6 +16,11 @@ import useModal from '@/hooks/useModal';
 import useDeviceImage from '@/hooks/useDeviceImage';
 import {format} from 'date-fns';
 import usePermission, {PermissionType} from '@/hooks/usePermission';
+import HeaderButton from '@/components/common/HeaderButton';
+import InputField from '@/components/common/InputField';
+import CustomButton from '@/components/common/CustomButton';
+import MarkerSelector from '@/components/post/MarkerSelector';
+import PostImageField from '@/components/post/PostImageField';
 
 type AddPostScreenProps = StackScreenProps<
   MapStackParamList,
@@ -44,8 +44,8 @@ const AddPostScreen = ({navigation, route}: AddPostScreenProps) => {
   const [isPickedDate, setIsPickedDate] = useState(false);
   const {imageUris, handleImageLibrary, handleDelete, handleMove} =
     useDeviceImage();
-  const datePickerModal = useModal();
   usePermission(PermissionType.PHOTO);
+  const datePickerModal = useModal();
 
   const createPost = useMutateCreatePost();
 
@@ -60,6 +60,8 @@ const AddPostScreen = ({navigation, route}: AddPostScreenProps) => {
       score,
       ...location,
     };
+    console.log('body', body);
+
     createPost.mutate(body, {
       onSuccess: () => {
         navigation.goBack();

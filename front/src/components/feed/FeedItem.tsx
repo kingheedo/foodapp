@@ -2,7 +2,8 @@ import {ResponseSinglePost} from '@/api';
 import {colors, feedNavigations} from '@/constants';
 import {FeedStackParmList} from '@/navigations/stack/FeedStackNavigator';
 import backUrl from '@/utils/backUrl';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 import {format} from 'date-fns';
 import React from 'react';
 import {
@@ -19,11 +20,11 @@ interface FeedItemProps {
 }
 
 const FeedItem = ({post}: FeedItemProps) => {
-  const navigation = useNavigation<NavigationProp<FeedStackParmList>>();
+  const navigation = useNavigation<StackNavigationProp<FeedStackParmList>>();
 
   const handleDetailScreen = () => {
     navigation.navigate(feedNavigations.FEED_DETAIL, {
-      post: post,
+      id: post.id,
     });
   };
 

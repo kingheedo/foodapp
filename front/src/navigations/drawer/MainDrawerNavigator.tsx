@@ -1,6 +1,5 @@
 import {colors, mainNavigations} from '@/constants';
 import CalendarHomeScreen from '@/screens/calendar/CalendarHomeScreen';
-import FeedHomeScreen from '@/screens/feed/FeedHomeScreen';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import React from 'react';
 import MapStackNavigator, {MapStackParamList} from '../stack/MapStackNavigator';

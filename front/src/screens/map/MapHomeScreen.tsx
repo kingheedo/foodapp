@@ -1,10 +1,8 @@
 import React, {useRef, useState} from 'react';
-import {Alert, Pressable, StyleSheet, Text, View} from 'react-native';
+import {Alert, Pressable, StyleSheet, View} from 'react-native';
 import MapView, {
-  Callout,
   LatLng,
   LongPressEvent,
-  Marker,
   PROVIDER_GOOGLE,
 } from 'react-native-maps';
 import {colors, mapNavigations} from '@/constants';
@@ -19,11 +17,11 @@ import usePermission, {PermissionType} from '@/hooks/usePermission';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import mapStyle from '@/styles/mapStyle';
-import CustomMarker from '@/components/CustomMarker';
+import CustomMarker from '@/components/common/CustomMarker';
 import {alerts} from '@/constants/messages';
 import useGetMarkers from '@/hooks/queries/useGetMarkers';
-import MarkerModal from '@/components/MarkerModal';
 import useModal from '@/hooks/useModal';
+import MarkerModal from '@/components/map/MarkerModal';
 
 type Navigation = CompositeNavigationProp<
   StackNavigationProp<MapStackParamList>,

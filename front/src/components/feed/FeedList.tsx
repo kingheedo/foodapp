@@ -1,9 +1,10 @@
 import useGetInfinitePosts from '@/hooks/queries/useGetInfinitePosts';
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native';
 import FeedItem from './FeedItem';
 import {Text} from 'react-native';
 import {colors} from '@/constants';
+import {useFocusEffect} from '@react-navigation/native';
 
 interface FeedListProps {}
 
@@ -21,10 +22,12 @@ const FeedList = ({}: FeedListProps) => {
       fetchNextPage();
     }
   };
+  console.log('posts', posts);
 
   const handleRefresh = async () => {
     setRefreshing(true);
     await refetch();
+
     setRefreshing(false);
   };
 

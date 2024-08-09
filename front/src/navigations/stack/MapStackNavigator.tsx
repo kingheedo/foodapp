@@ -6,7 +6,7 @@ import {LatLng} from 'react-native-maps';
 
 // 전달하고자 파라미터가 없을떄는 undefined
 export type MapStackParamList = {
-  [mapNavigations.MAP_HOME]: undefined;
+  [mapNavigations.MAP_HOME]: {id: number};
   [mapNavigations.ADD_POST]: {location: LatLng};
 };
 

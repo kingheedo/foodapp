@@ -1,16 +1,13 @@
-import {ResponseSinglePost} from '@/api';
-import HeaderButton from '@/components/HeaderButton';
 import {colors, feedNavigations} from '@/constants';
 import FeedDetailScreen from '@/screens/feed/FeedDetailScreen';
-import FeedHomeScreen from '@/screens/feed/FeedHomeScreen';
 import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import FeedBottomTabNavigator from '../bottomTab/FeedBottomTabNavigator';
 
 export type FeedStackParmList = {
   [feedNavigations.FEED_HOME]: undefined;
-  [feedNavigations.FEED_DETAIL]: {post: ResponseSinglePost};
+  [feedNavigations.FEED_DETAIL]: {id: number};
 };
 
 const Stack = createStackNavigator<FeedStackParmList>();
@@ -19,11 +16,11 @@ const FeedStackNavigator = () => {
     <Stack.Navigator
       screenOptions={{
         cardStyle: {
-          backgroundColor: 'white',
+          backgroundColor: colors.WHITE,
         },
         headerStyle: {
           shadowColor: 'gray',
-          backgroundColor: 'white',
+          backgroundColor: colors.WHITE,
         },
         headerTitleStyle: {
           fontSize: 15,
@@ -32,23 +29,30 @@ const FeedStackNavigator = () => {
       }}>
       <Stack.Screen
         name={feedNavigations.FEED_HOME}
-        component={FeedHomeScreen}
-        options={({navigation}) => ({
+        component={FeedBottomTabNavigator}
+        options={({route, navigation}) => ({
           headerLeftContainerStyle: {
             marginLeft: 15,
           },
-          headerTitle: '피드',
-          headerLeft: () => (
-            <HeaderButton
-              onPress={() => navigation.openDrawer()}
-              icon={<Ionicons name="menu" size={25} color={colors.BLACK} />}
-            />
-          ),
+          headerShown: false,
+          // headerLeft: () => (
+          //   <HeaderButton
+          //     onPress={() => navigation.openDrawer()}
+          //     icon={<Ionicons name="menu" size={25} color={colors.BLACK} />}
+          //   />
+          // ),
         })}
       />
       <Stack.Screen
         name={feedNavigations.FEED_DETAIL}
         component={FeedDetailScreen}
+        options={{
+          headerTitle: '',
+          headerShown: false,
+          cardStyle: {
+            backgroundColor: colors.GRAY_100,
+          },
+        }}
       />
     </Stack.Navigator>
   );

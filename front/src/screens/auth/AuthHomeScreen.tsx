@@ -3,8 +3,8 @@ import React from 'react';
 import {Dimensions, Image, StyleSheet, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {authNavigations} from '@/constants';
-import CustomButton from '@/components/CustomButton';
 import {AuthStackParamList} from '@/navigations/stack/AuthStackNavigator';
+import CustomButton from '@/components/common/CustomButton';
 
 interface IAuthHomeScreenProps extends StackScreenProps<AuthStackParamList> {}
 

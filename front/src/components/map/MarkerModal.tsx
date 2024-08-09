@@ -1,4 +1,4 @@
-import {colors} from '@/constants';
+import {colors, feedNavigations, mainNavigations} from '@/constants';
 import useGetPost from '@/hooks/queries/useGetPost';
 import backUrl from '@/utils/backUrl';
 import {format} from 'date-fns';
@@ -13,9 +13,14 @@ import {
   Text,
   View,
 } from 'react-native';
-import CustomMarker from './CustomMarker';
+import CustomMarker from '@/components/common/CustomMarker';
 import Octicons from 'react-native-vector-icons/Octicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {FeedStackParmList} from '@/navigations/stack/FeedStackNavigator';
+import {DrawerNavigationProp} from '@react-navigation/drawer';
+import {MainDrawerParamList} from '@/navigations/drawer/MainDrawerNavigator';
 
 interface MarkerModalProps {
   markerId: number | null;
@@ -23,8 +28,24 @@ interface MarkerModalProps {
   handleClose: () => void;
 }
 
+type Navigation = CompositeNavigationProp<
+  DrawerNavigationProp<MainDrawerParamList>,
+  StackNavigationProp<FeedStackParmList>
+>;
+
 const MarkerModal = ({markerId, visible, handleClose}: MarkerModalProps) => {
   const {data: post} = useGetPost(markerId);
+  const navigation = useNavigation<Navigation>();
+
+  const handlePressModal = () => {
+    navigation.navigate(mainNavigations.FEED, {
+      screen: feedNavigations.FEED_DETAIL,
+      params: {
+        id: Number(post?.id),
+      },
+      initial: false,
+    });
+  };
 
   if (!post) {
     return null;
@@ -33,7 +54,7 @@ const MarkerModal = ({markerId, visible, handleClose}: MarkerModalProps) => {
   return (
     <Modal visible={visible} animationType="slide" transparent={true}>
       <SafeAreaView style={styles.optionBackground} onTouchEnd={handleClose}>
-        <Pressable style={styles.cardContainer}>
+        <Pressable style={styles.cardContainer} onPress={handlePressModal}>
           <View style={styles.cardInner}>
             <View style={styles.imageContainer}>
               {post.images[0] && post.images[0].uri && (
