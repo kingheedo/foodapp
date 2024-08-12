@@ -2,6 +2,7 @@ import {colorHex, colors} from '@/constants';
 import React, {createContext, PropsWithChildren, useContext} from 'react';
 import {
   Modal,
+  ModalProps,
   Pressable,
   PressableProps,
   SafeAreaView,
@@ -11,21 +12,22 @@ import {
   View,
 } from 'react-native';
 
-interface IOptionModalProps {
+interface IOptionModalProps extends ModalProps {
   open: boolean;
   handleClose?: () => void;
   handleConfirm?: () => void;
   btnLabel: string;
 }
 
-const OptionModalContext = createContext<IOptionModalProps | null>(null);
+const OptionModalContext = createContext<null>(null);
 
-const OptionModal = ({
+const OptionModalMain = ({
   open,
   handleClose,
   handleConfirm,
   btnLabel,
   children,
+  ...props
 }: IOptionModalProps & PropsWithChildren) => {
   return (
     <OptionModalContext.Provider value={null}>
@@ -33,19 +35,17 @@ const OptionModal = ({
         visible={open}
         transparent
         animationType="slide"
-        onRequestClose={handleClose}>
+        onRequestClose={handleClose}
+        {...props}>
         <TouchableWithoutFeedback onPress={handleClose}>
           <SafeAreaView style={styles.modalBackground}>
             <Pressable onPress={handleClose}>
-              <View style={styles.optionContainer}>
-                <View style={styles.pickerContainer}>{children}</View>
-              </View>
+              <View style={styles.optionContainer}>{children}</View>
             </Pressable>
             <View style={styles.optionContainer}>
-              <OptionItem
+              <OptionButton
                 label={btnLabel}
-                color={'BLUE'}
-                onPress={handleConfirm ? handleConfirm : handleClose}
+                onPress={handleConfirm ?? handleClose}
               />
             </View>
           </SafeAreaView>
@@ -55,24 +55,38 @@ const OptionModal = ({
   );
 };
 
-export const OptionList = ({children}: PropsWithChildren) => {
-  return children;
-};
-
 interface IOptionItem extends PressableProps {
   label: string;
-  color: 'RED' | 'BLUE';
+  isDanger?: boolean;
 }
 
-export const OptionItem = ({label, color, onPress}: IOptionItem) => {
+export const OptionButton = ({
+  label,
+  isDanger = false,
+  ...props
+}: IOptionItem) => {
   return (
-    <Pressable onPress={onPress}>
-      <View style={styles.optionItem}>
-        <Text style={{color: colorHex[color]}}>{label}</Text>
-      </View>
+    <Pressable
+      style={({pressed}) => [
+        styles.optionItem,
+        pressed && styles.optionItemPressed,
+      ]}
+      {...props}>
+      <Text
+        style={[styles.optionItemText, isDanger && styles.isDangerOptionText]}>
+        {label}
+      </Text>
     </Pressable>
   );
 };
+
+export const OptionDivider = () => <View style={styles.optionDivider} />;
+
+export const OptionModalTitle = ({children}: PropsWithChildren) => (
+  <View style={styles.titleContainer}>
+    <Text style={styles.titleText}>{children}</Text>
+  </View>
+);
 
 const styles = StyleSheet.create({
   modalBackground: {
@@ -81,23 +95,48 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   optionContainer: {
-    backgroundColor: colors.WHITE,
+    backgroundColor: colors.GRAY_100,
     marginBottom: 10,
     borderRadius: 15,
     marginHorizontal: 10,
     overflow: 'hidden',
   },
-  pickerContainer: {
-    alignItems: 'center',
-  },
   optionItem: {
     height: 50,
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: colors.GRAY_300,
+  },
+  optionDivider: {
+    borderWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: colors.GRAY_200,
+  },
+  optionItemPressed: {
+    backgroundColor: colors.GRAY_200,
+  },
+  optionItemText: {
+    fontSize: 17,
+    fontWeight: '500',
+    color: colors.BLUE_500,
+  },
+  isDangerOptionText: {
+    color: colors.RED_500,
+  },
+  titleContainer: {
+    alignItems: 'center',
+    padding: 15,
+  },
+  titleText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: colors.BLACK,
   },
 });
+
 export const useOptionModal = () => useContext(OptionModalContext);
 
-export default OptionModal;
+export const OptionModal = Object.assign(OptionModalMain, {
+  Button: OptionButton,
+  Divider: OptionDivider,
+  Title: OptionModalTitle,
+});

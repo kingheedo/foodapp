@@ -26,7 +26,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import HeaderButton from '@/components/common/HeaderButton';
 import useModal from '@/hooks/useModal';
-import OptionModal, {OptionItem} from '@/components/common/OptionModal';
 import useGetPost from '@/hooks/queries/useGetPost';
 import CustomButton from '@/components/common/CustomButton';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -34,6 +33,7 @@ import {CompositeScreenProps} from '@react-navigation/native';
 import {DrawerScreenProps} from '@react-navigation/drawer';
 import {MainDrawerParamList} from '@/navigations/drawer/MainDrawerNavigator';
 import useLocationStore from '@/store/useLocationStore';
+import {OptionModal} from '@/components/common/OptionModal';
 
 type FeedDetailScreenProps = CompositeScreenProps<
   StackScreenProps<FeedStackParmList, typeof feedNavigations.FEED_DETAIL>,
@@ -42,7 +42,7 @@ type FeedDetailScreenProps = CompositeScreenProps<
 const FeedDetailScreen = ({navigation, route}: FeedDetailScreenProps) => {
   const {id} = route.params;
   const [activeImageIdx, setActiveImageIdx] = useState(0);
-  const moreOptionModal = useModal();
+  const detailOptionModal = useModal();
   const {data: post} = useGetPost(id);
   const insets = useSafeAreaInsets();
   const {setMoveLocation} = useLocationStore();
@@ -117,7 +117,7 @@ const FeedDetailScreen = ({navigation, route}: FeedDetailScreenProps) => {
               style={{
                 alignItems: 'baseline',
               }}
-              onPress={moreOptionModal.handleOpen}
+              onPress={detailOptionModal.handleOpen}
               icon={
                 <Ionicons
                   name="ellipsis-vertical"
@@ -200,15 +200,16 @@ const FeedDetailScreen = ({navigation, route}: FeedDetailScreenProps) => {
           )}
         </View>
         <OptionModal
-          open={moreOptionModal.open}
+          open={detailOptionModal.open}
           btnLabel="취소"
-          handleClose={moreOptionModal.handleClose}>
-          <OptionItem label="삭제하기" color="RED" onPress={handleDeletePost} />
-          <OptionItem
-            label="수정하기"
-            color="BLUE"
-            onPress={handleModifyPost}
+          handleClose={detailOptionModal.handleClose}>
+          <OptionModal.Button
+            label="삭제하기"
+            onPress={handleDeletePost}
+            isDanger={true}
           />
+          <OptionModal.Divider />
+          <OptionModal.Button label="수정하기" onPress={handleModifyPost} />
         </OptionModal>
       </ScrollView>
 
