@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useState} from 'react';
 import {Alert, Pressable, StyleSheet, View} from 'react-native';
 import MapView, {
   LatLng,
@@ -22,6 +22,8 @@ import {alerts} from '@/constants/messages';
 import useGetMarkers from '@/hooks/queries/useGetMarkers';
 import useModal from '@/hooks/useModal';
 import MarkerModal from '@/components/map/MarkerModal';
+import useMoveMapView from '@/hooks/useMoveMapView';
+import {numbers} from '@/constants/numbers';
 
 type Navigation = CompositeNavigationProp<
   StackNavigationProp<MapStackParamList>,
@@ -29,7 +31,6 @@ type Navigation = CompositeNavigationProp<
 >;
 
 const MapHomeScreen = () => {
-  const mapRef = useRef<MapView | null>(null);
   const inset = useSafeAreaInsets();
   const navigation = useNavigation<Navigation>();
   const {userLocation, isLocationError} = useUserLocation();
@@ -38,30 +39,39 @@ const MapHomeScreen = () => {
   const {data: markers = []} = useGetMarkers();
   const markerModal = useModal();
   usePermission(PermissionType.LOCATION);
+  const {mapRef, moveMapView, handleDelta} = useMoveMapView();
 
+  /** 마커 길게 누를 시
+   *
+   * 1.해당 마커의 위치를 저장
+   */
   const handleLongPressMapView = ({nativeEvent}: LongPressEvent) => {
     setSelectedLocation(nativeEvent.coordinate);
   };
 
+  /** 마커 클릭시
+   *
+   * 마커 id 저장,
+   * 마커 모달이 열림
+   */
   const handlePressMarker = (id: number) => {
     setMarkerId(id);
     markerModal.handleOpen();
   };
 
+  /** 현재 내 위치로 이동 */
   const handleselectedLocation = () => {
     if (isLocationError) {
       return;
     }
-
-    mapRef.current?.animateToRegion({
+    moveMapView({
       latitude: userLocation.latitude,
       longitude: userLocation.longitude,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
     });
   };
 
-  const handleAddLocation = () => {
+  /** 장소 등록 핸들러 */
+  const handleAddPost = () => {
     if (selectedLocation === null) {
       return Alert.alert(
         alerts.NOT_SELECTED_LOCATION.title,
@@ -83,14 +93,14 @@ const MapHomeScreen = () => {
         provider={PROVIDER_GOOGLE}
         initialRegion={{
           ...userLocation,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
+          ...numbers.INITIAL_DETLTA,
         }}
         showsUserLocation
         followsUserLocation
         showsMyLocationButton={false}
         customMapStyle={mapStyle}
-        onLongPress={handleLongPressMapView}>
+        onLongPress={handleLongPressMapView}
+        onRegionChangeComplete={handleDelta}>
         {markers.map(({id, color, score, ...coordinate}) => (
           <CustomMarker
             key={id}
@@ -116,7 +126,7 @@ const MapHomeScreen = () => {
         <Ionicons name="menu" color={colors.WHITE} size={25} />
       </Pressable>
       <View style={styles.buttonList}>
-        <Pressable style={styles.mapButton} onPress={handleAddLocation}>
+        <Pressable style={styles.mapButton} onPress={handleAddPost}>
           <MaterialIcons name="add" color={colors.WHITE} size={25} />
         </Pressable>
         <Pressable style={styles.mapButton} onPress={handleselectedLocation}>

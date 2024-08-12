@@ -11,7 +11,7 @@ const createPost = async (body: RequsetCreatePost): Promise<ResponsePost> => {
   return data;
 };
 
-type ResponseSinglePost = Post & {isFavorite: boolean} & {images: ImageUri[]};
+type ResponseSinglePost = ResponsePost & {isFavorite: boolean};
 
 const getPost = async (id: number): Promise<ResponseSinglePost> => {
   const {data} = await axiosInstance.get(`/posts/${id}`);

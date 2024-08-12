@@ -1,5 +1,11 @@
 import PreviewImageList from '@/components/common/PreviewImageList';
-import {colorHex, colors, feedNavigations} from '@/constants';
+import {
+  colorHex,
+  colors,
+  feedNavigations,
+  mainNavigations,
+  mapNavigations,
+} from '@/constants';
 import {FeedStackParmList} from '@/navigations/stack/FeedStackNavigator';
 import backUrl from '@/utils/backUrl';
 import {StackScreenProps} from '@react-navigation/stack';
@@ -24,18 +30,22 @@ import OptionModal, {OptionItem} from '@/components/common/OptionModal';
 import useGetPost from '@/hooks/queries/useGetPost';
 import CustomButton from '@/components/common/CustomButton';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {CompositeScreenProps} from '@react-navigation/native';
+import {DrawerScreenProps} from '@react-navigation/drawer';
+import {MainDrawerParamList} from '@/navigations/drawer/MainDrawerNavigator';
+import useLocationStore from '@/store/useLocationStore';
 
-type FeedDetailScreenProps = StackScreenProps<
-  FeedStackParmList,
-  typeof feedNavigations.FEED_DETAIL
+type FeedDetailScreenProps = CompositeScreenProps<
+  StackScreenProps<FeedStackParmList, typeof feedNavigations.FEED_DETAIL>,
+  DrawerScreenProps<MainDrawerParamList>
 >;
-
 const FeedDetailScreen = ({navigation, route}: FeedDetailScreenProps) => {
   const {id} = route.params;
   const [activeImageIdx, setActiveImageIdx] = useState(0);
   const moreOptionModal = useModal();
   const {data: post} = useGetPost(id);
   const insets = useSafeAreaInsets();
+  const {setMoveLocation} = useLocationStore();
 
   /** image 활성 인덱스
    *
@@ -60,9 +70,15 @@ const FeedDetailScreen = ({navigation, route}: FeedDetailScreenProps) => {
     console.log('handleFavorite');
   };
   const handleShowLocation = () => {
-    // hookNavigation.navigate(mapNavigations.MAP_HOME, {
-    //   id,
-    // });
+    if (!post) {
+      return;
+    }
+    const {latitude, longitude} = post;
+
+    setMoveLocation({latitude, longitude});
+    navigation.navigate(mainNavigations.HOME, {
+      screen: mapNavigations.MAP_HOME,
+    });
   };
 
   if (!post) {
@@ -208,9 +224,12 @@ const FeedDetailScreen = ({navigation, route}: FeedDetailScreenProps) => {
             <Octicons name="star-fill" color={colors.WHITE} size={30} />
           </View>
         </Pressable>
-        <Pressable onPress={handleShowLocation}>
-          <CustomButton label="위치보기" size="medium" variant="filled" />
-        </Pressable>
+        <CustomButton
+          label="위치보기"
+          size="medium"
+          variant="filled"
+          onPress={handleShowLocation}
+        />
       </View>
     </>
   );
