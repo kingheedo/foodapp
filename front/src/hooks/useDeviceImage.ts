@@ -7,7 +7,7 @@ import {
 } from 'react-native-image-picker';
 import useMutateUploadImages from './queries/useMutateUploadImages';
 import getImageFormData from '@/utils/getImageFormData';
-import {alerts, errorMessages} from '@/constants/messages';
+import {alerts} from '@/constants/messages';
 
 const cameraOptions: ImageLibraryOptions = {
   mediaType: 'photo',
@@ -15,11 +15,15 @@ const cameraOptions: ImageLibraryOptions = {
   selectionLimit: 5,
 };
 
+interface IUseDeviceImageProps {
+  initialImages?: ImageUri[];
+}
+
 /** 최대 이미지 갯수 */
 const EXCEED_NUMBER = 5;
 
-const useDeviceImage = () => {
-  const [imageUris, setImageUris] = useState<ImageUri[]>([]);
+const useDeviceImage = ({initialImages = []}: IUseDeviceImageProps) => {
+  const [imageUris, setImageUris] = useState<ImageUri[]>(initialImages);
   const uploadImages = useMutateUploadImages();
 
   /** 이미지 좌우 이동 핸들러 */
@@ -93,7 +97,7 @@ const useDeviceImage = () => {
         handleUploadImages(formData);
       }
     } catch (error) {
-      console.error(errorMessages.others);
+      console.error('handleUploadImages', error);
     }
   };
 

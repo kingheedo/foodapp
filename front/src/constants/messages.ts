@@ -1,19 +1,8 @@
-type ErorMessage = {
-  [key: string]: string;
-};
-
-type Alert = {
-  [key: string]: {
-    title: string;
-    description: string;
-  };
-};
-
-const errorMessages: ErorMessage = {
+const errorMessages = {
   CANNOT_GET_ADDRESS: '주소를 알 수 없습니다.',
-};
+} as const;
 
-const alerts: Alert = {
+const alerts = {
   NOT_SELECTED_LOCATION: {
     title: '추가할 위치를 선택해주세요.',
     description: '지도를 길게 누르면 위치가 선택됩니다.',
@@ -34,6 +23,10 @@ const alerts: Alert = {
     title: '에러 발생',
     description: '에러가 발생하였습니다. 다시 시도해주세요.',
   },
-};
+  DELETE_POST: {
+    title: '삭제하시겠습니까?',
+    description: '피드와 지도에서 모두 삭제됩니다.',
+  },
+} as const;
 
 export {errorMessages, alerts};

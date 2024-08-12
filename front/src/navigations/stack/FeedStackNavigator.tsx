@@ -4,10 +4,13 @@ import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import FeedBottomTabNavigator from '../bottomTab/FeedBottomTabNavigator';
+import EditPostScreen from '@/screens/feed/EditPostScreen';
+import {LatLng} from 'react-native-maps';
 
 export type FeedStackParmList = {
   [feedNavigations.FEED_HOME]: undefined;
   [feedNavigations.FEED_DETAIL]: {id: number};
+  [feedNavigations.POST_EDIT]: {location: LatLng};
 };
 
 const Stack = createStackNavigator<FeedStackParmList>();
@@ -30,18 +33,12 @@ const FeedStackNavigator = () => {
       <Stack.Screen
         name={feedNavigations.FEED_HOME}
         component={FeedBottomTabNavigator}
-        options={({route, navigation}) => ({
+        options={{
           headerLeftContainerStyle: {
             marginLeft: 15,
           },
           headerShown: false,
-          // headerLeft: () => (
-          //   <HeaderButton
-          //     onPress={() => navigation.openDrawer()}
-          //     icon={<Ionicons name="menu" size={25} color={colors.BLACK} />}
-          //   />
-          // ),
-        })}
+        }}
       />
       <Stack.Screen
         name={feedNavigations.FEED_DETAIL}
@@ -52,6 +49,13 @@ const FeedStackNavigator = () => {
           cardStyle: {
             backgroundColor: colors.GRAY_100,
           },
+        }}
+      />
+      <Stack.Screen
+        name={feedNavigations.POST_EDIT}
+        component={EditPostScreen}
+        options={{
+          headerTitle: '장소 수정',
         }}
       />
     </Stack.Navigator>

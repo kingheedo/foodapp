@@ -10,7 +10,7 @@ import {FeedStackParmList} from '@/navigations/stack/FeedStackNavigator';
 import backUrl from '@/utils/backUrl';
 import {StackScreenProps} from '@react-navigation/stack';
 import {format} from 'date-fns';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Dimensions,
   Image,
@@ -33,7 +33,8 @@ import {CompositeScreenProps} from '@react-navigation/native';
 import {DrawerScreenProps} from '@react-navigation/drawer';
 import {MainDrawerParamList} from '@/navigations/drawer/MainDrawerNavigator';
 import useLocationStore from '@/store/useLocationStore';
-import {OptionModal} from '@/components/common/OptionModal';
+import useDetailPostStore from '@/store/useDetailPostStore';
+import FeedDetailOption from '@/components/feed/FeedDetailOption';
 
 type FeedDetailScreenProps = CompositeScreenProps<
   StackScreenProps<FeedStackParmList, typeof feedNavigations.FEED_DETAIL>,
@@ -46,6 +47,7 @@ const FeedDetailScreen = ({navigation, route}: FeedDetailScreenProps) => {
   const {data: post} = useGetPost(id);
   const insets = useSafeAreaInsets();
   const {setMoveLocation} = useLocationStore();
+  const {setDetailPost} = useDetailPostStore();
 
   /** image 활성 인덱스
    *
@@ -53,11 +55,6 @@ const FeedDetailScreen = ({navigation, route}: FeedDetailScreenProps) => {
    */
   const handleActiveImageIdx = (idx: number) => {
     setActiveImageIdx(idx);
-  };
-
-  /** 게시물 삭제 핸들러 */
-  const handleDeletePost = () => {
-    console.log('handleDeletePost');
   };
 
   /** 게시물 수정 핸들러 */
@@ -80,6 +77,10 @@ const FeedDetailScreen = ({navigation, route}: FeedDetailScreenProps) => {
       screen: mapNavigations.MAP_HOME,
     });
   };
+
+  useEffect(() => {
+    if (post) setDetailPost(post);
+  }, [post]);
 
   if (!post) {
     return null;
@@ -199,18 +200,11 @@ const FeedDetailScreen = ({navigation, route}: FeedDetailScreenProps) => {
             </View>
           )}
         </View>
-        <OptionModal
-          open={detailOptionModal.open}
-          btnLabel="취소"
-          handleClose={detailOptionModal.handleClose}>
-          <OptionModal.Button
-            label="삭제하기"
-            onPress={handleDeletePost}
-            isDanger={true}
-          />
-          <OptionModal.Divider />
-          <OptionModal.Button label="수정하기" onPress={handleModifyPost} />
-        </OptionModal>
+
+        <FeedDetailOption
+          detailOption={detailOptionModal}
+          location={{latitude: post.latitude, longitude: post.longitude}}
+        />
       </ScrollView>
 
       <View

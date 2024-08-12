@@ -20,6 +20,7 @@ const feedNavigations = {
   FEED_DETAIL: 'FeedDetail',
   FEED_SEARCH: 'FeedSearch',
   FEED_FAVORITE: 'FeedFavorite',
+  POST_EDIT: 'PostEdit',
 } as const;
 
 export {authNavigations, mainNavigations, mapNavigations, feedNavigations};
