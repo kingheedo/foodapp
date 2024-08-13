@@ -21,6 +21,7 @@ const feedNavigations = {
   FEED_SEARCH: 'FeedSearch',
   FEED_FAVORITE: 'FeedFavorite',
   POST_EDIT: 'PostEdit',
+  IMAGE_ZOOM: 'ImageZoom',
 } as const;
 
 export {authNavigations, mainNavigations, mapNavigations, feedNavigations};

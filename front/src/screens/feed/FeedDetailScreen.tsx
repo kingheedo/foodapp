@@ -42,25 +42,11 @@ type FeedDetailScreenProps = CompositeScreenProps<
 >;
 const FeedDetailScreen = ({navigation, route}: FeedDetailScreenProps) => {
   const {id} = route.params;
-  const [activeImageIdx, setActiveImageIdx] = useState(0);
   const detailOptionModal = useModal();
   const {data: post} = useGetPost(id);
   const insets = useSafeAreaInsets();
   const {setMoveLocation} = useLocationStore();
   const {setDetailPost} = useDetailPostStore();
-
-  /** image 활성 인덱스
-   *
-   * preview image list에서 선택한 이미지의 인덱스 설정 함수
-   */
-  const handleActiveImageIdx = (idx: number) => {
-    setActiveImageIdx(idx);
-  };
-
-  /** 게시물 수정 핸들러 */
-  const handleModifyPost = () => {
-    console.log('handleModifyPost');
-  };
 
   /** 게시물 즐겨찾기 핸들러 */
   const handleFavorite = () => {
@@ -136,7 +122,7 @@ const FeedDetailScreen = ({navigation, route}: FeedDetailScreenProps) => {
                   style={styles.mainImage}
                   resizeMode="cover"
                   source={{
-                    uri: `${backUrl}/${post.images[activeImageIdx].uri}`,
+                    uri: `${backUrl}/${post.images[0].uri}`,
                   }}
                 />
               )}
@@ -193,10 +179,7 @@ const FeedDetailScreen = ({navigation, route}: FeedDetailScreenProps) => {
           </View>
           {post.images.length > 0 && (
             <View style={styles.imageListContainer}>
-              <PreviewImageList
-                imageUris={post.images}
-                handleActiveIdx={handleActiveImageIdx}
-              />
+              <PreviewImageList imageUris={post.images} zoomEnable />
             </View>
           )}
         </View>

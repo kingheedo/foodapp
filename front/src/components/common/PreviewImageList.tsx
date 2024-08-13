@@ -5,15 +5,17 @@ import React, {memo} from 'react';
 import {Image, Pressable, ScrollView, StyleSheet, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Octicons from 'react-native-vector-icons/Octicons';
-import {colors} from '@/constants';
+import {colors, feedNavigations} from '@/constants';
 import {v4 as uuidv4} from 'uuid';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {FeedStackParmList} from '@/navigations/stack/FeedStackNavigator';
 
 interface PreviewImageListProps {
   imageUris: ImageUri[];
   showOption?: boolean;
   handleDelete?: (index: number) => void;
   handleMove?: (fromIdx: number, toIdx: number) => void;
-  handleActiveIdx?: (idx: number) => void;
+  zoomEnable?: boolean;
 }
 
 interface ImageItemProps {
@@ -24,10 +26,19 @@ interface ImageItemProps {
 const PreviewImageList = ({
   imageUris,
   showOption = false,
+  zoomEnable = false,
   handleDelete,
   handleMove,
-  handleActiveIdx,
 }: PreviewImageListProps) => {
+  const navigation = useNavigation<NavigationProp<FeedStackParmList>>();
+  const handlePressImage = (index: number) => {
+    if (zoomEnable) {
+      navigation.navigate(feedNavigations.IMAGE_ZOOM, {
+        index,
+      });
+    }
+  };
+
   const ImageItem = memo(({index, uri}: ImageItemProps) =>
     showOption ? (
       <>
@@ -65,8 +76,8 @@ const PreviewImageList = ({
     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
       <View style={styles.imageContainer}>
         {imageUris.map(({uri}, index) =>
-          handleActiveIdx ? (
-            <Pressable key={uuidv4()} onPress={() => handleActiveIdx(index)}>
+          zoomEnable ? (
+            <Pressable key={uuidv4()} onPress={() => handlePressImage(index)}>
               <View style={styles.square}>
                 <ImageItem index={index} uri={uri} />
               </View>
