@@ -3,10 +3,12 @@ import FeedDetailScreen from '@/screens/feed/FeedDetailScreen';
 import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import FeedBottomTabNavigator from '../bottomTab/FeedBottomTabNavigator';
 import EditPostScreen from '@/screens/feed/EditPostScreen';
 import {LatLng} from 'react-native-maps';
 import ImageZoomScreen from '@/components/feed/ImageZoomScreen';
+import FeedHomeScreen from '@/screens/feed/FeedHomeScreen';
+import HeaderButton from '@/components/common/HeaderButton';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export type FeedStackParmList = {
   [feedNavigations.FEED_HOME]: undefined;
@@ -34,13 +36,20 @@ const FeedStackNavigator = () => {
       }}>
       <Stack.Screen
         name={feedNavigations.FEED_HOME}
-        component={FeedBottomTabNavigator}
-        options={{
-          headerLeftContainerStyle: {
-            marginLeft: 15,
-          },
-          headerShown: false,
-        }}
+        component={FeedHomeScreen}
+        options={({navigation}) => ({
+          headerTitle: '피드',
+          headerTitleAlign: 'center',
+          headerLeft: () => (
+            <HeaderButton
+              style={{
+                marginLeft: 20,
+              }}
+              onPress={() => navigation.openDrawer()}
+              icon={<Ionicons name="menu" size={25} color={colors.BLACK} />}
+            />
+          ),
+        })}
       />
       <Stack.Screen
         name={feedNavigations.FEED_DETAIL}

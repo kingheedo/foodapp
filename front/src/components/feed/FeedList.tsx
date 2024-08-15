@@ -1,39 +1,32 @@
-import useGetInfinitePosts from '@/hooks/queries/useGetInfinitePosts';
-import React, {useCallback, useState} from 'react';
-import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native';
+import React, {useState} from 'react';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 import FeedItem from './FeedItem';
-import {Text} from 'react-native';
-import {colors} from '@/constants';
-import {useFocusEffect} from '@react-navigation/native';
+import {ResponsePost, ResponseSinglePost} from '@/api';
 
-interface FeedListProps {}
+interface FeedListProps {
+  posts: ResponsePost[] | ResponseSinglePost[];
+  emptyMessage: string;
+  handleNextPage: () => void;
+  handleRefetch: () => void;
+}
 
-const FeedList = ({}: FeedListProps) => {
-  const {
-    data: posts,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    refetch,
-  } = useGetInfinitePosts();
+const FeedList = ({
+  posts,
+  emptyMessage,
+  handleNextPage,
+  handleRefetch,
+}: FeedListProps) => {
   const [refreshing, setRefreshing] = useState(false);
-  const handleNextPage = () => {
-    if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
-    }
-  };
-  console.log('posts', posts);
 
   const handleRefresh = async () => {
     setRefreshing(true);
-    await refetch();
-
+    await handleRefetch();
     setRefreshing(false);
   };
 
   return (
     <FlatList
-      data={posts?.pages.flat()}
+      data={posts}
       renderItem={({item}) => <FeedItem post={item} />}
       keyExtractor={item => String(item.id)}
       numColumns={2}
@@ -42,6 +35,11 @@ const FeedList = ({}: FeedListProps) => {
       onEndReachedThreshold={0.5}
       refreshing={refreshing}
       onRefresh={() => handleRefresh}
+      ListEmptyComponent={
+        <View>
+          <Text style={styles.emptyText}>{emptyMessage}</Text>
+        </View>
+      }
       scrollIndicatorInsets={{right: 1}}
       // ListFooterComponent={
       //   isFetchingNextPage ? (
@@ -55,6 +53,9 @@ const FeedList = ({}: FeedListProps) => {
 const styles = StyleSheet.create({
   contentContainer: {
     padding: 15,
+  },
+  emptyText: {
+    textAlign: 'center',
   },
 });
 

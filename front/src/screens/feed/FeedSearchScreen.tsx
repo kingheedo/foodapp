@@ -1,14 +1,15 @@
 import InputField from '@/components/common/InputField';
 import FeedList from '@/components/feed/FeedList';
-import {colors, feedNavigations} from '@/constants';
+import {colors, feedBottomTabNavigations} from '@/constants';
+import useGetSearchPosts from '@/hooks/queries/useGetSearchPosts';
 import useForm from '@/hooks/useForm';
 import {FeedBottomTabParmList} from '@/navigations/bottomTab/FeedBottomTabNavigator';
 import {MainDrawerParamList} from '@/navigations/drawer/MainDrawerNavigator';
 import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {CompositeNavigationProp} from '@react-navigation/native';
-import React from 'react';
-import {Pressable, SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import React, {useRef} from 'react';
+import {Pressable, SafeAreaView, StyleSheet, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Octicons from 'react-native-vector-icons/Octicons';
 
@@ -16,24 +17,39 @@ type FeedSearchScreenProps = {
   navigation: CompositeNavigationProp<
     BottomTabNavigationProp<
       FeedBottomTabParmList,
-      typeof feedNavigations.FEED_SEARCH
+      typeof feedBottomTabNavigations.FEED_SEARCH
     >,
     DrawerNavigationProp<MainDrawerParamList>
   >;
 };
 
 const FeedSearchScreen = ({navigation}: FeedSearchScreenProps) => {
-  const {inputValues: searchValue, getFormInputProps} = useForm({
+  const {inputValues, getFormInputProps} = useForm({
     initialValue: {
       search: '',
     },
   });
+  const {
+    data: posts,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+    refetch,
+  } = useGetSearchPosts(inputValues.search);
+
+  const handleNextPage = () => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  };
+
+  const handleRefetch = () => {
+    refetch();
+  };
 
   const handleDrawerBtn = () => {
     navigation.openDrawer();
   };
-
-  console.log('searchValue', searchValue);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -56,7 +72,17 @@ const FeedSearchScreen = ({navigation}: FeedSearchScreenProps) => {
             />
           </View>
         </View>
-        <FeedList />
+        <View
+          style={{
+            marginTop: 48,
+          }}>
+          <FeedList
+            posts={posts?.pages.flat() || []}
+            handleNextPage={handleNextPage}
+            handleRefetch={handleRefetch}
+            emptyMessage="검색결과에 해당하는 피드가 존재하지 않습니다."
+          />
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -68,6 +94,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.WHITE,
   },
   contentContainer: {
+    position: 'relative',
     marginTop: 20,
   },
   menuContainer: {
@@ -81,10 +108,13 @@ const styles = StyleSheet.create({
     marginRight: 6,
   },
   searchContainer: {
+    position: 'absolute',
     flexDirection: 'row',
     alignItems: 'center',
     marginHorizontal: 20,
     paddingBottom: 20,
+    zIndex: 1,
+    backgroundColor: colors.WHITE,
   },
   inputContainer: {
     flex: 1,

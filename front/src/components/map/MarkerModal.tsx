@@ -1,4 +1,9 @@
-import {colors, feedNavigations, mainNavigations} from '@/constants';
+import {
+  colors,
+  feedBottomTabNavigations,
+  feedNavigations,
+  mainNavigations,
+} from '@/constants';
 import useGetPost from '@/hooks/queries/useGetPost';
 import backUrl from '@/utils/backUrl';
 import {format} from 'date-fns';
@@ -17,10 +22,10 @@ import CustomMarker from '@/components/common/CustomMarker';
 import Octicons from 'react-native-vector-icons/Octicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {FeedStackParmList} from '@/navigations/stack/FeedStackNavigator';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {MainDrawerParamList} from '@/navigations/drawer/MainDrawerNavigator';
+import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
+import {FeedBottomTabParmList} from '@/navigations/bottomTab/FeedBottomTabNavigator';
 
 interface MarkerModalProps {
   markerId: number | null;
@@ -30,7 +35,7 @@ interface MarkerModalProps {
 
 type Navigation = CompositeNavigationProp<
   DrawerNavigationProp<MainDrawerParamList>,
-  StackNavigationProp<FeedStackParmList>
+  BottomTabNavigationProp<FeedBottomTabParmList>
 >;
 
 const MarkerModal = ({markerId, visible, handleClose}: MarkerModalProps) => {
@@ -39,11 +44,14 @@ const MarkerModal = ({markerId, visible, handleClose}: MarkerModalProps) => {
 
   const handlePressModal = () => {
     navigation.navigate(mainNavigations.FEED, {
-      screen: feedNavigations.FEED_DETAIL,
+      screen: feedBottomTabNavigations.FEED_HOME,
       params: {
-        id: Number(post?.id),
+        screen: feedNavigations.FEED_DETAIL,
+        params: {
+          id: Number(post?.id),
+        },
+        initial: false,
       },
-      initial: false,
     });
   };
 

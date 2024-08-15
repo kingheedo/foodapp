@@ -10,7 +10,7 @@ import {FeedStackParmList} from '@/navigations/stack/FeedStackNavigator';
 import backUrl from '@/utils/backUrl';
 import {StackScreenProps} from '@react-navigation/stack';
 import {format} from 'date-fns';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {
   Dimensions,
   Image,
@@ -35,6 +35,7 @@ import {MainDrawerParamList} from '@/navigations/drawer/MainDrawerNavigator';
 import useLocationStore from '@/store/useLocationStore';
 import useDetailPostStore from '@/store/useDetailPostStore';
 import FeedDetailOption from '@/components/feed/FeedDetailOption';
+import useMutateFavoritePost from '@/hooks/queries/useMutateFavoritePost';
 
 type FeedDetailScreenProps = CompositeScreenProps<
   StackScreenProps<FeedStackParmList, typeof feedNavigations.FEED_DETAIL>,
@@ -47,11 +48,14 @@ const FeedDetailScreen = ({navigation, route}: FeedDetailScreenProps) => {
   const insets = useSafeAreaInsets();
   const {setMoveLocation} = useLocationStore();
   const {setDetailPost} = useDetailPostStore();
+  const updateFavoritePost = useMutateFavoritePost();
+  console.log('post', post);
 
   /** 게시물 즐겨찾기 핸들러 */
   const handleFavorite = () => {
-    console.log('handleFavorite');
+    updateFavoritePost.mutate(id);
   };
+
   const handleShowLocation = () => {
     if (!post) {
       return;
@@ -199,7 +203,11 @@ const FeedDetailScreen = ({navigation, route}: FeedDetailScreenProps) => {
           style={({pressed}) => pressed && styles.utilityIconContainerPressed}
           onPress={handleFavorite}>
           <View style={[styles.utilityItem, styles.utilityIconContainer]}>
-            <Octicons name="star-fill" color={colors.WHITE} size={30} />
+            <Octicons
+              name="star-fill"
+              color={post.isFavorite ? colors.YELLOW_500 : colors.WHITE}
+              size={30}
+            />
           </View>
         </Pressable>
         <CustomButton

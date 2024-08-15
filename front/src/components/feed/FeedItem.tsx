@@ -1,4 +1,4 @@
-import {ResponseSinglePost} from '@/api';
+import {ResponsePost, ResponseSinglePost} from '@/api';
 import {colors, feedNavigations} from '@/constants';
 import {FeedStackParmList} from '@/navigations/stack/FeedStackNavigator';
 import backUrl from '@/utils/backUrl';
@@ -16,7 +16,7 @@ import {
 } from 'react-native';
 
 interface FeedItemProps {
-  post: ResponseSinglePost;
+  post: ResponsePost | ResponseSinglePost;
 }
 
 const FeedItem = ({post}: FeedItemProps) => {

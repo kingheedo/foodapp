@@ -47,7 +47,44 @@ const updatePost = async ({
   return data;
 };
 
-export {createPost, getPost, getPosts, deletePost, updatePost};
+const getFavoritePosts = async (page: number): Promise<ResponsePost[]> => {
+  const {data} = await axiosInstance.get(`/favorites/my?page=${page}`);
+
+  return data;
+};
+
+const updateFavoritePost = async (id: number): Promise<number> => {
+  const {data} = await axiosInstance.post(`/favorites/${id}`);
+
+  return data;
+};
+
+type RequestFavoritePosts = {
+  query: string;
+  pageParam: number;
+};
+
+const getSearchPosts = async ({
+  query,
+  pageParam,
+}: RequestFavoritePosts): Promise<ResponsePost[]> => {
+  const {data} = await axiosInstance.get(
+    `/posts/my/search?query=${query}&page=${pageParam}`,
+  );
+
+  return data;
+};
+
+export {
+  createPost,
+  getPost,
+  getPosts,
+  deletePost,
+  updatePost,
+  getFavoritePosts,
+  updateFavoritePost,
+  getSearchPosts,
+};
 export type {
   RequsetCreatePost,
   ResponsePost,
