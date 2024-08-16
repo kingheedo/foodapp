@@ -1,21 +1,23 @@
 import React, {useState} from 'react';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
-import FeedItem from './FeedItem';
+import {FlatList, Keyboard, StyleSheet, Text, View} from 'react-native';
 import {ResponsePost, ResponseSinglePost} from '@/api';
+import FeedItem from '@/components/feed/FeedItem';
 
-interface FeedListProps {
+interface FeedSearchListProps {
   posts: ResponsePost[] | ResponseSinglePost[];
   emptyMessage: string;
+  headerComponent: React.ReactElement;
   handleNextPage: () => void;
   handleRefetch: () => void;
 }
 
-const FeedList = ({
+const FeedSearchList = ({
   posts,
   emptyMessage,
+  headerComponent,
   handleNextPage,
   handleRefetch,
-}: FeedListProps) => {
+}: FeedSearchListProps) => {
   const [refreshing, setRefreshing] = useState(false);
 
   const handleRefresh = async () => {
@@ -35,6 +37,9 @@ const FeedList = ({
       onEndReachedThreshold={0.5}
       refreshing={refreshing}
       onRefresh={() => handleRefresh}
+      ListHeaderComponent={headerComponent}
+      stickyHeaderIndices={[0]}
+      onScrollBeginDrag={() => Keyboard.dismiss()}
       ListEmptyComponent={
         <View>
           <Text style={styles.emptyText}>{emptyMessage}</Text>
@@ -54,4 +59,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FeedList;
+export default FeedSearchList;
