@@ -6,6 +6,8 @@ import {TextInput} from 'react-native-gesture-handler';
 import useAuth from '@/hooks/queries/useAuth';
 import InputField from '@/components/common/InputField';
 import CustomButton from '@/components/common/CustomButton';
+import Toast from 'react-native-toast-message';
+import { errorMessages } from '@/constants';
 
 const LoginScreen = () => {
   const passwordRef = useRef<TextInput | null>(null);
@@ -20,7 +22,14 @@ const LoginScreen = () => {
 
   /** 폼 제춣 핸들러 */
   const handleSubmit = () => {
-    loginMutation.mutate(inputValues);
+    loginMutation.mutate(inputValues, {
+      onError: (error) => Toast.show({
+        type: 'error',
+        text1: error.response?.data.message || errorMessages.UNEXPECT_ERROR,
+        position: 'bottom',
+        visibilityTime: 2000
+      })
+    });
   };
 
   return (

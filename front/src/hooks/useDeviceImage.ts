@@ -8,6 +8,7 @@ import {
 import useMutateUploadImages from './queries/useMutateUploadImages';
 import getImageFormData from '@/utils/getImageFormData';
 import {alerts} from '@/constants/messages';
+import Toast from 'react-native-toast-message';
 
 const cameraOptions: ImageLibraryOptions = {
   mediaType: 'photo',
@@ -46,9 +47,6 @@ const useDeviceImage = ({initialImages = []}: IUseDeviceImageProps) => {
 
   /** 이미지 특정 갯수 초과 여부 */
   const checkExceed = (assetsLength: number) => {
-    console.log('imageUris.length', imageUris.length);
-    console.log('assetsLength', assetsLength);
-
     if (assetsLength > EXCEED_NUMBER) {
       Alert.alert(
         alerts.EXCEEDED_NUMBER.title,
@@ -70,7 +68,11 @@ const useDeviceImage = ({initialImages = []}: IUseDeviceImageProps) => {
         },
       });
     } catch (error) {
-      console.error('uploadImages error', error);
+      Toast.show({
+        type: 'error',
+        text1: '이미지 업로드에 실패하였습니다.',
+        position: 'bottom'
+      })
     }
   };
 
@@ -98,6 +100,13 @@ const useDeviceImage = ({initialImages = []}: IUseDeviceImageProps) => {
       }
     } catch (error) {
       console.error('handleUploadImages', error);
+
+      Toast.show({
+        type: 'error',
+        text1: '갤러리를 열 수 없습니다.',
+        text2: '권한을 확인해주세요.',
+        position: 'bottom'
+      })
     }
   };
 
