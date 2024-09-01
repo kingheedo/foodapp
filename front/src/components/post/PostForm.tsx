@@ -40,7 +40,6 @@ interface IPostFormProps {
 const PostForm = ({isEdit = false, location}: IPostFormProps) => {
   const {detailPost} = useDetailPostStore();
   const isEditMode = isEdit && detailPost;
-  console.log('isEditMode', detailPost);
 
   const descriptionRef = useRef<TextInput | null>(null);
   const addPostForm = useForm({

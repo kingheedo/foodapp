@@ -10,6 +10,7 @@ import CustomDrawerContent from './CustomDrawerContent';
 import FeedBottomTabNavigator, {
   FeedBottomTabParmList,
 } from '../bottomTab/FeedBottomTabNavigator';
+import DraweHeaderButton from '@/components/common/DraweHeaderButton';
 
 export type MainDrawerParamList = {
   [mainNavigations.HOME]: NavigatorScreenParams<MapStackParamList>;
@@ -82,9 +83,12 @@ const MainDrawerNavigator = () => {
       <Drawer.Screen
         name={mainNavigations.CALENDAR}
         component={CalendarHomeScreen}
-        options={{
+        options={({navigation}) => ({
           title: '캘린더',
-        }}
+          headerTitleAlign: 'center',
+          headerShown: true,
+          headerLeft: () => <DraweHeaderButton navigation={navigation} />,
+        })}
       />
     </Drawer.Navigator>
   );

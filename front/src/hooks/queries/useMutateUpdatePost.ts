@@ -18,6 +18,9 @@ const useMutateUpdatePost = (options?: UseMutationCustomOptions) => {
         [queryKeys.POST, queryKeys.GET_POST, newPost.id],
         newPost,
       );
+      queryClient.invalidateQueries({
+        queryKey: [queryKeys.CALENDAR, queryKeys.GET_POSTS, new Date(newPost.date).getFullYear(), new Date(newPost.date).getMonth()+1],
+      });
     },
     ...options,
   });

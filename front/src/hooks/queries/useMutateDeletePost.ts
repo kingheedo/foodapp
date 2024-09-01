@@ -14,22 +14,25 @@ const useMuatateDeletePost = (options?: UseMutationCustomOptions) => {
       queryClient.invalidateQueries({
         queryKey: [queryKeys.MARKER, queryKeys.GET_MARKERS],
       });
-      queryClient.setQueryData<InfiniteData<ResponseSinglePost[], number>>(
-        [queryKeys.POST, queryKeys.GET_POSTS],
-        prevPosts => {
-          if (!prevPosts) {
-            return prevPosts;
-          }
-          const newPosts = prevPosts?.pages.map(page =>
-            page.filter(post => post.id !== deletedID),
-          );
+      queryClient.invalidateQueries({
+        queryKey: [queryKeys.CALENDAR, queryKeys.GET_POSTS],
+      });
+      // queryClient.setQueryData<InfiniteData<ResponseSinglePost[], number>>(
+      //   [queryKeys.POST, queryKeys.GET_POSTS],
+      //   prevPosts => {
+      //     if (!prevPosts) {
+      //       return prevPosts;
+      //     }
+      //     const newPosts = prevPosts?.pages.map(page =>
+      //       page.filter(post => post.id !== deletedID),
+      //     );
 
-          return {
-            ...prevPosts,
-            pages: newPosts,
-          };
-        },
-      );
+      //     return {
+      //       ...prevPosts,
+      //       pages: newPosts,
+      //     };
+      //   },
+      // );
     },
     ...options,
   });

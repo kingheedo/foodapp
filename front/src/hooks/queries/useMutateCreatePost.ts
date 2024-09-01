@@ -2,6 +2,7 @@ import {createPost} from '@/api';
 import {queryKeys} from '@/constants';
 import {UseMutationCustomOptions} from '@/types/common';
 import {Marker} from '@/types/domain';
+import { getMonthYearDetails } from '@/utils/date';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 
 const useMutateCreatePost = (options?: UseMutationCustomOptions) => {
@@ -27,6 +28,9 @@ const useMutateCreatePost = (options?: UseMutationCustomOptions) => {
 
       queryClient.invalidateQueries({
         queryKey: [queryKeys.POST, queryKeys.GET_POSTS],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [queryKeys.CALENDAR, queryKeys.GET_POSTS, new Date(newPost.date).getFullYear(), new Date(newPost.date).getMonth()+1],
       });
     },
     ...options,
