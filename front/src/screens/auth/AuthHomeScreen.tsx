@@ -1,10 +1,18 @@
 import {StackScreenProps} from '@react-navigation/stack';
 import React from 'react';
-import {Dimensions, Image, StyleSheet, View} from 'react-native';
+import {
+  Dimensions,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {authNavigations} from '@/constants';
+import {authNavigations, colors} from '@/constants';
 import {AuthStackParamList} from '@/navigations/stack/AuthStackNavigator';
 import CustomButton from '@/components/common/CustomButton';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 interface IAuthHomeScreenProps extends StackScreenProps<AuthStackParamList> {}
 
@@ -19,14 +27,21 @@ const AuthHomeScreen = ({navigation}: IAuthHomeScreenProps) => {
       </View>
       <View style={styles.buttonContainer}>
         <CustomButton
-          label="로그인"
-          onPress={() => navigation.navigate(authNavigations.LOGIN)}
+          label="카카오 로그인하기"
+          onPress={() => navigation.navigate(authNavigations.KAKAO)}
+          style={styles.kakaoButtonContainer}
+          textStyle={styles.kakaoButtonText}
+          icon={
+            <Ionicons name="chatbubble-sharp" color={'#181500'} size={16} />
+          }
         />
         <CustomButton
-          label="회원가입"
-          variant="outlined"
-          onPress={() => navigation.navigate(authNavigations.SIGNUP)}
+          label="이메일 로그인하기"
+          onPress={() => navigation.navigate(authNavigations.LOGIN)}
         />
+        <Pressable onPress={() => navigation.navigate(authNavigations.SIGNUP)}>
+          <Text style={styles.emailSignupText}>이메일로 가입하기</Text>
+        </Pressable>
       </View>
     </SafeAreaView>
   );
@@ -48,10 +63,22 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-
   buttonContainer: {
     flex: 1,
+    alignItems: 'center',
     gap: 10,
+  },
+  kakaoButtonContainer: {
+    backgroundColor: '#fee503',
+  },
+  kakaoButtonText: {
+    color: '#181600',
+  },
+  emailSignupText: {
+    textDecorationLine: 'underline',
+    fontWeight: '500',
+    padding: 10,
+    color: colors.BLACK,
   },
 });
 
