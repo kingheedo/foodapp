@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Alert, Pressable, StyleSheet, View} from 'react-native';
 import MapView, {
   LatLng,
@@ -25,6 +25,7 @@ import MarkerModal from '@/components/map/MarkerModal';
 import useMoveMapView from '@/hooks/useMoveMapView';
 import {numbers} from '@/constants/numbers';
 import Toast from 'react-native-toast-message';
+import useLocationStore from '@/store/useLocationStore';
 
 type Navigation = CompositeNavigationProp<
   StackNavigationProp<MapStackParamList>,
@@ -35,7 +36,7 @@ const MapHomeScreen = () => {
   const inset = useSafeAreaInsets();
   const navigation = useNavigation<Navigation>();
   const {userLocation, isLocationError} = useUserLocation();
-  const [selectedLocation, setSelectedLocation] = useState<LatLng | null>(null);
+  const {selectedLocation, setSelectedLocation} = useLocationStore();
   const [markerId, setMarkerId] = useState<number | null>(null);
   const {data: markers = []} = useGetMarkers();
   const markerModal = useModal();
@@ -66,8 +67,8 @@ const MapHomeScreen = () => {
       Toast.show({
         type: 'error',
         text1: '위치 권한을 허용해주세요.',
-        position: 'bottom'
-      })
+        position: 'bottom',
+      });
       return;
     }
     moveMapView({
@@ -90,6 +91,17 @@ const MapHomeScreen = () => {
     });
     setSelectedLocation(null);
   };
+
+  /** 장소 검색 버튼 핸들러 */
+  const handleSearch = () => {
+    navigation.navigate(mapNavigations.SEARCH_LOCATION);
+  };
+
+  useEffect(() => {
+    if (selectedLocation) {
+      setSelectedLocation(selectedLocation);
+    }
+  }, [selectedLocation]);
 
   return (
     <>
@@ -134,6 +146,9 @@ const MapHomeScreen = () => {
       <View style={styles.buttonList}>
         <Pressable style={styles.mapButton} onPress={handleAddPost}>
           <MaterialIcons name="add" color={colors.WHITE} size={25} />
+        </Pressable>
+        <Pressable style={styles.mapButton} onPress={handleSearch}>
+          <Ionicons name="search" color={colors.WHITE} size={25} />
         </Pressable>
         <Pressable style={styles.mapButton} onPress={handleselectedLocation}>
           <MaterialIcons name="my-location" color={colors.WHITE} size={25} />
