@@ -34,6 +34,8 @@ const feedBottomTabNavigations = {
 const settingNavigatons = {
   SETTING_HOME: 'SettingHome',
   EDIT_PROFILE: 'EditProfile',
+  EDIT_CATEGORY: 'EditCategory',
+  DELETE_ACCOUNT: 'DeleteAccount',
 } as const;
 
 export {

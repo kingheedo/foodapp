@@ -1,4 +1,5 @@
-import {colors} from '@/constants';
+import SettingButton from '@/components/setting/SettingButton';
+import {colors, mainNavigations} from '@/constants';
 import useAuth from '@/hooks/queries/useAuth';
 import {
   DrawerContentScrollView,
@@ -18,7 +19,6 @@ import {
 const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   const {getProfileQuery, logoutMutation} = useAuth();
   const {email, nickname, imageUri, kakaoImageUri} = getProfileQuery.data || {};
-
   const handleLogout = () => {
     logoutMutation.mutate(null);
   };
@@ -48,9 +48,12 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
         </View>
         <DrawerItemList {...props} />
       </DrawerContentScrollView>
-      <Pressable onPress={handleLogout} style={styles.logoutBtn}>
-        <Text>로그아웃</Text>
-      </Pressable>
+      <View style={styles.bottomButtonContainer}>
+        <SettingButton style={styles.settingButton} />
+        <Pressable onPress={handleLogout} style={styles.logoutBtn}>
+          <Text>로그아웃</Text>
+        </Pressable>
+      </View>
     </SafeAreaView>
   );
 };
@@ -82,10 +85,15 @@ const styles = StyleSheet.create({
     height: '100%',
     borderRadius: 35,
   },
+  bottomButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
   logoutBtn: {
-    alignItems: 'flex-end',
     padding: 10,
   },
+  settingButton: {},
 });
 
 export default CustomDrawerContent;

@@ -11,11 +11,15 @@ import FeedBottomTabNavigator, {
   FeedBottomTabParmList,
 } from '../bottomTab/FeedBottomTabNavigator';
 import DraweHeaderButton from '@/components/common/DraweHeaderButton';
+import SettingStackNavigator, {
+  SettingStackParamList,
+} from '../stack/SettingStackNavigator';
 
 export type MainDrawerParamList = {
   [mainNavigations.HOME]: NavigatorScreenParams<MapStackParamList>;
   [mainNavigations.FEED]: NavigatorScreenParams<FeedBottomTabParmList>;
   [mainNavigations.CALENDAR]: undefined;
+  [mainNavigations.SETTING]: NavigatorScreenParams<SettingStackParamList>;
 };
 
 const Drawer = createDrawerNavigator<MainDrawerParamList>();
@@ -34,6 +38,9 @@ const MainDrawerNavigator = () => {
         break;
       case mainNavigations.CALENDAR:
         iconName = 'calendar-month';
+        break;
+      case mainNavigations.SETTING:
+        iconName = '';
         break;
     }
 
@@ -64,6 +71,9 @@ const MainDrawerNavigator = () => {
           fontSize: 15,
           fontWeight: '600',
         },
+        drawerItemStyle: {
+          display: route.name !== mainNavigations.SETTING ? 'flex' : 'none',
+        },
       })}>
       <Drawer.Screen
         name={mainNavigations.HOME}
@@ -88,6 +98,13 @@ const MainDrawerNavigator = () => {
           headerTitleAlign: 'center',
           headerShown: true,
           headerLeft: () => <DraweHeaderButton navigation={navigation} />,
+        })}
+      />
+      <Drawer.Screen
+        name={mainNavigations.SETTING}
+        component={SettingStackNavigator}
+        options={({navigation}) => ({
+          title: '',
         })}
       />
     </Drawer.Navigator>
