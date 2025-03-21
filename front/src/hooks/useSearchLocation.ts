@@ -12,7 +12,6 @@ interface IUseSearchLocationProps {
 const useSearchLocation = ({keyword, location}: IUseSearchLocationProps) => {
   const [addressInfo, setAddressInfo] = useState<AddressResponse | null>(null);
   const [pageParam, setPageParam] = useState(1);
-  console.log('pageParam', pageParam);
 
   /** 이전 클릭 시
    *
@@ -56,7 +55,6 @@ const useSearchLocation = ({keyword, location}: IUseSearchLocationProps) => {
             },
           },
         );
-        console.log('data', data);
 
         setAddressInfo(data);
       } catch (error) {

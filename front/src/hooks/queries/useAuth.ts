@@ -1,5 +1,6 @@
 import {MutationFunction, useMutation, useQuery} from '@tanstack/react-query';
 import {
+  editProfile,
   getAccessToken,
   getProfile,
   kakaoLogin,
@@ -59,11 +60,7 @@ const useLogout = (mutationOptions?: UseMutationCustomOptions) => {
     onSuccess: () => {
       removeHeader('Authorization');
       removeEncryptedStorage(storageKeys.REFRESH_TOKEN);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: [queryKeys.AUTH],
-      });
+      queryClient.resetQueries({queryKey: [queryKeys.AUTH]});
     },
     ...mutationOptions,
   });
@@ -106,6 +103,19 @@ const useGetProfile = (
   });
 };
 
+const useUpdateProfile = (mutationOptions?: UseMutationCustomOptions) => {
+  return useMutation({
+    mutationFn: editProfile,
+    onSuccess: newProfile => {
+      queryClient.setQueryData(
+        [queryKeys.AUTH, queryKeys.GET_PROFILE],
+        newProfile,
+      );
+    },
+    ...mutationOptions,
+  });
+};
+
 const useAuth = () => {
   const signupMutation = useSignup();
   const getRefreshTokenQuery = useGetRefreshToken();
@@ -116,12 +126,14 @@ const useAuth = () => {
   const loginMutation = useEmailLogin();
   const kakaoLoginMutation = useKaKaoLogin();
   const logoutMutation = useLogout();
+  const updateProfileMutation = useUpdateProfile();
 
   return {
     signupMutation,
     loginMutation,
     kakaoLoginMutation,
     logoutMutation,
+    updateProfileMutation,
     isLogin,
     getRefreshTokenQuery,
     getProfileQuery,

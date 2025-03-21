@@ -3,6 +3,10 @@ type UserInfo = {
   password: string;
 };
 
+const isBlank = (value: string) => {
+  return value.trim() === '';
+};
+
 const validateUser = (values: UserInfo) => {
   const errors = {
     email: '',
@@ -45,11 +49,28 @@ const validateAddPost = (values: {title: string}) => {
     description: '',
   };
 
-  if (values.title.trim() === '') {
+  if (isBlank(values.title)) {
     errors.title = '제목은 1~30자 이내로 입력해주세요.';
   }
 
   return errors;
 };
 
-export {validateLogin, validateSignup, validateAddPost};
+const validateEditProfile = (values: {nickname: string}) => {
+  const errors = {
+    nickname: '',
+  };
+  if (isBlank(values.nickname)) {
+    errors.nickname = '닉네임을 입력해주세요.';
+  }
+
+  return errors;
+};
+
+export {
+  isBlank,
+  validateLogin,
+  validateSignup,
+  validateAddPost,
+  validateEditProfile,
+};

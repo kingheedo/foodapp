@@ -49,7 +49,6 @@ const FeedDetailScreen = ({navigation, route}: FeedDetailScreenProps) => {
   const {setMoveLocation} = useLocationStore();
   const {setDetailPost} = useDetailPostStore();
   const updateFavoritePost = useMutateFavoritePost();
-  console.log('post', post);
 
   /** 게시물 즐겨찾기 핸들러 */
   const handleFavorite = () => {

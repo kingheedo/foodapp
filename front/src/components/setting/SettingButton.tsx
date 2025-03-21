@@ -1,5 +1,12 @@
-import {Pressable, PressableProps, View, ViewProps} from 'react-native';
-import {mainNavigations, settingNavigatons} from '@/constants';
+import {
+  Pressable,
+  PressableProps,
+  StyleSheet,
+  Text,
+  View,
+  ViewProps,
+} from 'react-native';
+import {colors, mainNavigations, settingNavigatons} from '@/constants';
 import {MainDrawerParamList} from '@/navigations/drawer/MainDrawerNavigator';
 import {SettingStackParamList} from '@/navigations/stack/SettingStackNavigator';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
@@ -27,10 +34,24 @@ const SettingButton = ({...props}: ISettingButtonprops) => {
   };
 
   return (
-    <Pressable {...props} onPress={handlePress}>
+    <Pressable {...props} onPress={handlePress} style={styles.container}>
       <Ionicons name="settings-outline" size={16} />
+      <Text style={styles.settingButtonText}>설정</Text>
     </Pressable>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    gap: 5,
+    alignItems: 'center',
+  },
+  settingButtonText: {
+    fontWeight: '600',
+    fontSize: 15,
+    color: colors.GRAY_700,
+  },
+});
 
 export default SettingButton;

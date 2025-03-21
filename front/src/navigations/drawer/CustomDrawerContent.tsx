@@ -1,6 +1,7 @@
 import SettingButton from '@/components/setting/SettingButton';
 import {colors, mainNavigations} from '@/constants';
 import useAuth from '@/hooks/queries/useAuth';
+import backUrl from '@/utils/backUrl';
 import {
   DrawerContentScrollView,
   DrawerItemList,
@@ -17,11 +18,8 @@ import {
 } from 'react-native';
 
 const CustomDrawerContent = (props: DrawerContentComponentProps) => {
-  const {getProfileQuery, logoutMutation} = useAuth();
+  const {getProfileQuery} = useAuth();
   const {email, nickname, imageUri, kakaoImageUri} = getProfileQuery.data || {};
-  const handleLogout = () => {
-    logoutMutation.mutate(null);
-  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -38,10 +36,18 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
               />
             )}
             {imageUri === null && kakaoImageUri && (
-              <Image source={{uri: kakaoImageUri}} style={styles.userImage} />
+              <Image
+                source={{
+                  uri: `${backUrl}/${kakaoImageUri}`,
+                }}
+                style={styles.userImage}
+              />
             )}
             {imageUri !== null && (
-              <Image source={{uri: imageUri}} style={styles.userImage} />
+              <Image
+                source={{uri: `${backUrl}/${imageUri}`}}
+                style={styles.userImage}
+              />
             )}
           </View>
           <Text style={styles.nameText}>{nickname ?? email}</Text>
@@ -49,10 +55,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
         <DrawerItemList {...props} />
       </DrawerContentScrollView>
       <View style={styles.bottomButtonContainer}>
-        <SettingButton style={styles.settingButton} />
-        <Pressable onPress={handleLogout} style={styles.logoutBtn}>
-          <Text>로그아웃</Text>
-        </Pressable>
+        <SettingButton />
       </View>
     </SafeAreaView>
   );
@@ -89,11 +92,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',
+    gap: 5,
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    borderTopWidth: 1,
+    borderTopColor: colors.GRAY_700,
   },
-  logoutBtn: {
-    padding: 10,
-  },
-  settingButton: {},
 });
 
 export default CustomDrawerContent;

@@ -8,6 +8,7 @@ import React from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import DeleteAccountScreen from '@/screens/setting/DeleteAccountScreen';
 import DraweHeaderButton from '@/components/common/DraweHeaderButton';
+import useAuth from '@/hooks/queries/useAuth';
 
 export type SettingStackParamList = {
   [settingNavigatons.SETTING_HOME]: undefined;
@@ -20,7 +21,20 @@ const Stack = createStackNavigator<SettingStackParamList>();
 
 const SettingStackNavigator = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        cardStyle: {
+          backgroundColor: colors.GRAY_100,
+        },
+        headerStyle: {
+          shadowColor: 'gray',
+          backgroundColor: colors.WHITE,
+        },
+        headerTitleStyle: {
+          fontSize: 15,
+        },
+        headerTintColor: colors.BLACK,
+      }}>
       <Stack.Screen
         name={settingNavigatons.SETTING_HOME}
         component={SettingHomeScreen}
@@ -36,13 +50,6 @@ const SettingStackNavigator = () => {
         options={({navigation}) => ({
           headerTitle: '프로필 수정',
           headerTitleAlign: 'center',
-          headerRight: () => (
-            <View style={styles.headerRightButton}>
-              <Pressable>
-                <Text>완료</Text>
-              </Pressable>
-            </View>
-          ),
         })}
       />
       <Stack.Screen
