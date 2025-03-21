@@ -5,6 +5,12 @@ interface IUseFormProps<T> {
   validate?: (value: T) => Record<keyof T, string>;
 }
 
+export type GetFormInputProps<T> = {
+  value: T[keyof T];
+  onChangeText: (text: string) => void;
+  onBlur: () => void;
+};
+
 const useForm = <T>({initialValue, validate}: IUseFormProps<T>) => {
   const [inputValues, setInputValues] = useState(initialValue);
   const [blured, setBlured] = useState<Record<string, boolean>>({});

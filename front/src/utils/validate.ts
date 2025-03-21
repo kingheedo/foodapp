@@ -1,3 +1,5 @@
+import {Category, LowerCaseCategory} from '@/types/domain';
+
 type UserInfo = {
   email: string;
   password: string;
@@ -67,10 +69,25 @@ const validateEditProfile = (values: {nickname: string}) => {
   return errors;
 };
 
+const validateEditCategory = (value: LowerCaseCategory) => {
+  const errors = Object.keys(value).reduce((acc, key) => {
+    acc[key as keyof LowerCaseCategory] = '';
+    return acc;
+  }, {} as Record<keyof LowerCaseCategory, string>);
+  Object.keys(value).forEach(key => {
+    if (isBlank(value[key as keyof LowerCaseCategory])) {
+      errors[key as keyof LowerCaseCategory] = '카테고리명을 입력해 주세요.';
+    }
+  });
+
+  return errors;
+};
+
 export {
   isBlank,
   validateLogin,
   validateSignup,
   validateAddPost,
   validateEditProfile,
+  validateEditCategory,
 };

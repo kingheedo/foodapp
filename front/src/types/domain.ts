@@ -4,6 +4,10 @@ type Category = {
   [key in MarkerColor]: string;
 };
 
+type LowerCaseCategory = {
+  [key in Lowercase<MarkerColor>]: string;
+};
+
 interface ImageUri {
   id?: number;
   uri: string;
@@ -33,4 +37,12 @@ interface Profile {
   loginType: 'email' | 'kakao' | 'apple';
 }
 
-export type {Category, MarkerColor, ImageUri, Marker, Post, Profile};
+export type {
+  Category,
+  LowerCaseCategory,
+  MarkerColor,
+  ImageUri,
+  Marker,
+  Post,
+  Profile,
+};

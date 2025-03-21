@@ -1,5 +1,7 @@
 import {MutationFunction, useMutation, useQuery} from '@tanstack/react-query';
 import {
+  deleteAccount,
+  editCategory,
   editProfile,
   getAccessToken,
   getProfile,
@@ -103,6 +105,19 @@ const useGetProfile = (
   });
 };
 
+const useUpdateCategory = (mutationOptions?: UseMutationCustomOptions) => {
+  return useMutation({
+    mutationFn: editCategory,
+    onSuccess: newProfile => {
+      queryClient.setQueryData(
+        [queryKeys.AUTH, queryKeys.GET_PROFILE],
+        newProfile,
+      );
+    },
+    ...mutationOptions,
+  });
+};
+
 const useUpdateProfile = (mutationOptions?: UseMutationCustomOptions) => {
   return useMutation({
     mutationFn: editProfile,
@@ -116,17 +131,28 @@ const useUpdateProfile = (mutationOptions?: UseMutationCustomOptions) => {
   });
 };
 
+const useDeleteAccount = (mutationOptions?: UseMutationCustomOptions) => {
+  return useMutation({
+    mutationFn: deleteAccount,
+    ...mutationOptions,
+  });
+};
+
 const useAuth = () => {
   const signupMutation = useSignup();
   const getRefreshTokenQuery = useGetRefreshToken();
   const getProfileQuery = useGetProfile({
     enabled: getRefreshTokenQuery.isSuccess,
   });
+  const updateCategory = useUpdateCategory();
   const isLogin = getProfileQuery.isSuccess;
   const loginMutation = useEmailLogin();
   const kakaoLoginMutation = useKaKaoLogin();
   const logoutMutation = useLogout();
   const updateProfileMutation = useUpdateProfile();
+  const deleteAccountMutation = useDeleteAccount({
+    onSuccess: () => logoutMutation.mutate(null),
+  });
 
   return {
     signupMutation,
@@ -134,9 +160,11 @@ const useAuth = () => {
     kakaoLoginMutation,
     logoutMutation,
     updateProfileMutation,
+    deleteAccountMutation,
     isLogin,
     getRefreshTokenQuery,
     getProfileQuery,
+    updateCategory,
   };
 };
 

@@ -58,13 +58,6 @@ const SettingStackNavigator = () => {
         options={({navigation}) => ({
           headerTitle: '카테고리 설정',
           headerTitleAlign: 'center',
-          headerRight: () => (
-            <View style={styles.headerRightButton}>
-              <Pressable>
-                <Text>완료</Text>
-              </Pressable>
-            </View>
-          ),
         })}
       />
       <Stack.Screen
@@ -78,12 +71,5 @@ const SettingStackNavigator = () => {
     </Stack.Navigator>
   );
 };
-
-const styles = StyleSheet.create({
-  headerRightButton: {
-    width: 50,
-    alignItems: 'center',
-  },
-});
 
 export default SettingStackNavigator;

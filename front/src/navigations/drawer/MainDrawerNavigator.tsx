@@ -39,18 +39,15 @@ const MainDrawerNavigator = () => {
       case mainNavigations.CALENDAR:
         iconName = 'calendar-month';
         break;
-      case mainNavigations.SETTING:
-        iconName = '';
-        break;
     }
 
-    return (
+    return iconName ? (
       <MaterialIcons
         name={iconName}
         size={20}
         color={focused ? colors.BLACK : colors.GRAY_500}
       />
-    );
+    ) : null;
   };
 
   return (

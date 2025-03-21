@@ -1,40 +1,52 @@
-import {colorHex, colors} from '@/constants';
+import {colorHex} from '@/constants';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import SettingCategoryItem from './SettingCategoryItem';
+import useForm from '@/hooks/useForm';
+import {LowerCaseCategory} from '@/types/domain';
 
-interface SettingCategoryListProps {}
+interface SettingCategoryListProps {
+  editCategoryForm: ReturnType<typeof useForm<LowerCaseCategory>>;
+}
 
 const markerList = [
   {
+    name: 'red',
     color: colorHex.RED,
-    content: '식당',
+    placeholder: '식당',
   },
   {
+    name: 'yellow',
     color: colorHex.YELLOW,
-    content: '카페',
+    placeholder: '카페',
   },
   {
+    name: 'green',
     color: colorHex.GREEN,
-    content: '병원',
+    placeholder: '병원',
   },
   {
+    name: 'blue',
     color: colorHex.BLUE,
-    content: '도서관',
+    placeholder: '도서관',
   },
   {
+    name: 'purple',
     color: colorHex.PURPLE,
-    content: '여행지',
+    placeholder: '여행지',
   },
-];
+] as const;
 
-const SettingCategoryList = ({}: SettingCategoryListProps) => {
+const SettingCategoryList = ({editCategoryForm}: SettingCategoryListProps) => {
   return (
     <View style={styles.container}>
       {markerList.map(marker => (
         <SettingCategoryItem
-          key={marker.content}
-          content={marker.content}
+          key={marker.placeholder}
+          placeholder={marker.placeholder}
+          error={editCategoryForm.errors[marker.name]}
+          blured={editCategoryForm.blured[marker.name]}
+          {...editCategoryForm.getFormInputProps(marker.name)}
           markerStyle={{
             backgroundColor: marker.color,
           }}
