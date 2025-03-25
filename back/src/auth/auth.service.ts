@@ -129,6 +129,8 @@ export class AuthService {
     profile.nickname = nickname;
     profile.imageUri = imageUri;
 
+    const { password, hashedRefreshToken, ...rest } = profile;
+
     try {
       await this.userRepository.save(profile);
     } catch (error) {
@@ -137,6 +139,7 @@ export class AuthService {
         '프로필 수정 도중 에러가 발생했습니다.',
       );
     }
+    return { ...rest };
   }
 
   async deleteRefreshToken(user: User) {

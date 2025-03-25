@@ -18,6 +18,7 @@ import {removeHeader, setHeader} from '@/utils/header';
 import {useEffect} from 'react';
 import queryClient from '@/api/queryClient';
 import {queryKeys, storageKeys} from '@/constants';
+import {Category, Profile} from '@/types/domain';
 
 const useSignup = (mutationOptions?: UseMutationCustomOptions) => {
   return useMutation({
@@ -95,12 +96,31 @@ const useGetRefreshToken = () => {
   return {isSuccess, isError};
 };
 
+type CustomResponseProfile = {categories: Category} & Profile;
+
+const trasnformGetProfile = (data: ResponseProfile): CustomResponseProfile => {
+  const {RED, YELLOW, GREEN, BLUE, PURPLE, ...rest} = data;
+  const categories = {
+    RED,
+    YELLOW,
+    GREEN,
+    BLUE,
+    PURPLE,
+  };
+
+  return {
+    categories,
+    ...rest,
+  };
+};
+
 const useGetProfile = (
-  queryOption?: UseQueryCustomOptions<ResponseProfile>,
+  queryOption?: UseQueryCustomOptions<ResponseProfile, CustomResponseProfile>,
 ) => {
   return useQuery({
     queryKey: [queryKeys.AUTH, queryKeys.GET_PROFILE],
     queryFn: getProfile,
+    select: trasnformGetProfile,
     ...queryOption,
   });
 };

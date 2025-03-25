@@ -1,9 +1,9 @@
 import {colorHex} from '@/constants';
-import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, TextInput, View} from 'react-native';
 import SettingCategoryItem from './SettingCategoryItem';
 import useForm from '@/hooks/useForm';
 import {LowerCaseCategory} from '@/types/domain';
+import {useRef} from 'react';
 
 interface SettingCategoryListProps {
   editCategoryForm: ReturnType<typeof useForm<LowerCaseCategory>>;
@@ -38,11 +38,21 @@ const markerList = [
 ] as const;
 
 const SettingCategoryList = ({editCategoryForm}: SettingCategoryListProps) => {
+  const refArray = useRef<(TextInput | null)[]>([]);
+
   return (
     <View style={styles.container}>
-      {markerList.map(marker => (
+      {markerList.map((marker, index) => (
         <SettingCategoryItem
+          ref={el => (refArray.current[index] = el)}
           key={marker.placeholder}
+          maxLength={10}
+          blurOnSubmit={false}
+          returnKeyType="next"
+          onSubmitEditing={() => {
+            refArray.current[index + 1]?.focus();
+          }}
+          autoFocus={marker.name === 'red'}
           placeholder={marker.placeholder}
           error={editCategoryForm.errors[marker.name]}
           blured={editCategoryForm.blured[marker.name]}

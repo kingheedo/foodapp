@@ -1,38 +1,51 @@
-import React from 'react';
-import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
+import React, {forwardRef} from 'react';
+import {
+  StyleProp,
+  StyleSheet,
+  TextInput,
+  TextInputProps,
+  View,
+  ViewStyle,
+} from 'react-native';
 import InputField from '../common/InputField';
-import {GetFormInputProps} from '@/hooks/useForm';
 
-interface SettingCategoryItemProps extends GetFormInputProps<string> {
+interface SettingCategoryItemProps extends TextInputProps {
   placeholder?: string;
   markerStyle?: StyleProp<ViewStyle>;
   error: string;
   blured: boolean;
+  value: string;
 }
 
-const SettingCategoryItem = ({
-  placeholder,
-  markerStyle = null,
-  value,
-  error,
-  blured,
-  ...props
-}: SettingCategoryItemProps) => {
-  return (
-    <View style={styles.container}>
-      <View style={[styles.circle, markerStyle]} />
-      <View style={{flex: 1}}>
-        <InputField
-          placeholder={`ex) ${placeholder}`}
-          value={value.toString()}
-          error={error}
-          blured={blured}
-          {...props}
-        />
+const SettingCategoryItem = forwardRef<TextInput, SettingCategoryItemProps>(
+  (
+    {
+      placeholder,
+      markerStyle = null,
+      value,
+      error,
+      blured,
+      ...props
+    }: SettingCategoryItemProps,
+    ref,
+  ) => {
+    return (
+      <View style={styles.container}>
+        <View style={[styles.circle, markerStyle]} />
+        <View style={{flex: 1}}>
+          <InputField
+            ref={ref}
+            placeholder={`ex) ${placeholder}`}
+            value={value}
+            error={error}
+            blured={blured}
+            {...props}
+          />
+        </View>
       </View>
-    </View>
-  );
-};
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   container: {

@@ -5,6 +5,7 @@ import {
   feedNavigations,
   mainNavigations,
   mapNavigations,
+  settingNavigatons,
 } from '@/constants';
 import {FeedStackParmList} from '@/navigations/stack/FeedStackNavigator';
 import backUrl from '@/utils/backUrl';
@@ -36,6 +37,7 @@ import useLocationStore from '@/store/useLocationStore';
 import useDetailPostStore from '@/store/useDetailPostStore';
 import FeedDetailOption from '@/components/feed/FeedDetailOption';
 import useMutateFavoritePost from '@/hooks/queries/useMutateFavoritePost';
+import useAuth from '@/hooks/queries/useAuth';
 
 type FeedDetailScreenProps = CompositeScreenProps<
   StackScreenProps<FeedStackParmList, typeof feedNavigations.FEED_DETAIL>,
@@ -45,6 +47,8 @@ const FeedDetailScreen = ({navigation, route}: FeedDetailScreenProps) => {
   const {id} = route.params;
   const detailOptionModal = useModal();
   const {data: post} = useGetPost(id);
+  const {getProfileQuery} = useAuth();
+  const {categories} = getProfileQuery.data ?? {};
   const insets = useSafeAreaInsets();
   const {setMoveLocation} = useLocationStore();
   const {setDetailPost} = useDetailPostStore();
@@ -64,6 +68,13 @@ const FeedDetailScreen = ({navigation, route}: FeedDetailScreenProps) => {
     setMoveLocation({latitude, longitude});
     navigation.navigate(mainNavigations.HOME, {
       screen: mapNavigations.MAP_HOME,
+    });
+  };
+
+  const handleMoveCategorySettingScreen = () => {
+    navigation.navigate(mainNavigations.SETTING, {
+      screen: settingNavigatons.EDIT_CATEGORY,
+      initial: false,
     });
   };
 
@@ -169,7 +180,13 @@ const FeedDetailScreen = ({navigation, route}: FeedDetailScreenProps) => {
                 <View style={styles.cardSubInfoRow}>
                   <Text style={styles.cardSubInfoRowLeft}>카테고리</Text>
                   <Text style={styles.cardSubInfoRowRight}>
-                    2020년 2월 20일
+                    {categories?.[post.color] ?? (
+                      <Pressable
+                        style={styles.emptyCategoryContainer}
+                        onPress={handleMoveCategorySettingScreen}>
+                        <Text style={styles.emptyCategoryText}>미설정</Text>
+                      </Pressable>
+                    )}
                   </Text>
                 </View>
               </View>
@@ -293,6 +310,14 @@ const styles = StyleSheet.create({
     height: 10,
     borderRadius: 10,
   },
+  emptyCategoryContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.GRAY_300,
+    padding: 2,
+    borderRadius: 2,
+  },
+  emptyCategoryText: {},
   descriptionContainer: {
     marginTop: 20,
   },
