@@ -18,6 +18,8 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Octicons from 'react-native-vector-icons/Octicons';
 import FeedSearchList from './FeedSearchList';
+import useThemeStore from '@/store/useThemeStore';
+import {ThemeMode} from '@/types/common';
 
 type FeedSearchScreenProps = {
   navigation: CompositeNavigationProp<
@@ -42,6 +44,8 @@ const FeedSearchScreen = ({navigation}: FeedSearchScreenProps) => {
     fetchNextPage,
     refetch,
   } = useGetSearchPosts(inputValues.search);
+  const {theme} = useThemeStore();
+  const styles = styling(theme);
 
   const handleNextPage = () => {
     if (hasNextPage && !isFetchingNextPage) {
@@ -60,7 +64,7 @@ const FeedSearchScreen = ({navigation}: FeedSearchScreenProps) => {
   const ListHeaderComponet = (
     <View style={styles.headerContainer}>
       <Pressable style={styles.menuContainer} onPress={handleDrawerBtn}>
-        <Ionicons name="menu" color={colors.BLACK} size={25} />
+        <Ionicons name="menu" color={colors[theme].BLACK} size={25} />
       </Pressable>
       <View style={styles.inputContainer}>
         <InputField
@@ -74,7 +78,7 @@ const FeedSearchScreen = ({navigation}: FeedSearchScreenProps) => {
           style={styles.searchIcon}
           name="search"
           size={25}
-          color={colors.BLACK}
+          color={colors[theme].BLACK}
         />
       </View>
     </View>
@@ -93,40 +97,41 @@ const FeedSearchScreen = ({navigation}: FeedSearchScreenProps) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.WHITE,
-  },
-  menuContainer: {
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: colors.GRAY_200,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 6,
-  },
-  headerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.WHITE,
-    paddingHorizontal: 5,
-    paddingTop: 5,
-    paddingBottom: 10,
-  },
-  inputContainer: {
-    flex: 1,
-  },
-  input: {
-    paddingRight: 40,
-  },
-  searchIcon: {
-    position: 'absolute',
-    top: 12,
-    right: 10,
-  },
-});
+const styling = (theme: ThemeMode) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors[theme].WHITE,
+    },
+    menuContainer: {
+      paddingHorizontal: 10,
+      paddingVertical: 10,
+      borderRadius: 5,
+      borderWidth: 1,
+      borderColor: colors[theme].GRAY_200,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginRight: 6,
+    },
+    headerContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: colors[theme].WHITE,
+      paddingHorizontal: 5,
+      paddingTop: 5,
+      paddingBottom: 10,
+    },
+    inputContainer: {
+      flex: 1,
+    },
+    input: {
+      paddingRight: 40,
+    },
+    searchIcon: {
+      position: 'absolute',
+      top: 12,
+      right: 10,
+    },
+  });
 
 export default FeedSearchScreen;

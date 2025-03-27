@@ -15,6 +15,8 @@ import {
 } from 'react-native';
 import {LatLng} from 'react-native-maps';
 import Octicons from 'react-native-vector-icons/Octicons';
+import useThemeStore from '@/store/useThemeStore';
+import {ThemeMode} from '@/types/common';
 
 type Navigation = StackNavigationProp<MapStackParamList>;
 
@@ -24,8 +26,10 @@ interface SearchLocationListProps {
 
 const SearchLocationList = ({list}: SearchLocationListProps) => {
   const {setSelectedLocation} = useLocationStore();
-  const navigation = useNavigation<Navigation>();
   const {setMoveLocation} = useLocationStore();
+  const navigation = useNavigation<Navigation>();
+  const {theme} = useThemeStore();
+  const styles = styling(theme);
 
   const onPressLocation = ({latitude, longitude}: LatLng) => {
     setMoveLocation({latitude, longitude});
@@ -57,7 +61,11 @@ const SearchLocationList = ({list}: SearchLocationListProps) => {
                 index === list.length - 1 && styles.lastLocationItem,
               ]}
               key={address.id}>
-              <Octicons name="location" color={colors.CYAN_700} size={14} />
+              <Octicons
+                name="location"
+                color={colors[theme].CYAN_700}
+                size={14}
+              />
               <View>
                 <View style={styles.addressHeader}>
                   <Text style={styles.placenameText} numberOfLines={1}>
@@ -86,55 +94,56 @@ const SearchLocationList = ({list}: SearchLocationListProps) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    marginTop: 17,
-    borderWidth: 1,
-    borderColor: colors.GRAY_200,
-    borderRadius: 5,
-    width: '100%',
-    height: Dimensions.get('screen').height / 2,
-  },
-  listContainer: {
-    paddingVertical: 4,
-    paddingHorizontal: 10,
-  },
-  locationItem: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 6,
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.GRAY_200,
-  },
-  lastLocationItem: {
-    borderBottomWidth: 0,
-  },
-  addressHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  infoSection: {
-    flexDirection: 'row',
-    gap: 5,
-  },
-  placenameText: {
-    color: colors.BLACK,
-    fontSize: 16,
-    fontWeight: '600',
-    flexShrink: 1,
-  },
-  subText: {
-    fontSize: 12,
-    color: colors.GRAY_500,
-    flexShrink: 1,
-  },
-  addressName: {
-    color: colors.BLACK,
-    fontSize: 12,
-  },
-  noResultContainer: {},
-  noResultText: {},
-});
+const styling = (theme: ThemeMode) =>
+  StyleSheet.create({
+    container: {
+      marginTop: 17,
+      borderWidth: 1,
+      borderColor: colors[theme].GRAY_200,
+      borderRadius: 5,
+      width: '100%',
+      height: Dimensions.get('screen').height / 2,
+    },
+    listContainer: {
+      paddingVertical: 4,
+      paddingHorizontal: 10,
+    },
+    locationItem: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      gap: 6,
+      paddingVertical: 10,
+      borderBottomWidth: 1,
+      borderBottomColor: colors[theme].GRAY_200,
+    },
+    lastLocationItem: {
+      borderBottomWidth: 0,
+    },
+    addressHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    infoSection: {
+      flexDirection: 'row',
+      gap: 5,
+    },
+    placenameText: {
+      color: colors[theme].BLACK,
+      fontSize: 16,
+      fontWeight: '600',
+      flexShrink: 1,
+    },
+    subText: {
+      fontSize: 12,
+      color: colors[theme].GRAY_500,
+      flexShrink: 1,
+    },
+    addressName: {
+      color: colors[theme].BLACK,
+      fontSize: 12,
+    },
+    noResultContainer: {},
+    noResultText: {},
+  });
 
 export default SearchLocationList;

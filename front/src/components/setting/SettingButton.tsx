@@ -13,6 +13,8 @@ import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import useThemeStore from '@/store/useThemeStore';
+import {ThemeMode} from '@/types/common';
 
 type Navigation = CompositeNavigationProp<
   StackNavigationProp<
@@ -26,6 +28,8 @@ interface ISettingButtonprops extends PressableProps {}
 
 const SettingButton = ({...props}: ISettingButtonprops) => {
   const navigation = useNavigation<Navigation>();
+  const {theme} = useThemeStore();
+  const styles = styling(theme);
 
   const handlePress = () => {
     navigation.navigate(mainNavigations.SETTING, {
@@ -35,23 +39,28 @@ const SettingButton = ({...props}: ISettingButtonprops) => {
 
   return (
     <Pressable {...props} onPress={handlePress} style={styles.container}>
-      <Ionicons name="settings-outline" size={16} />
+      <Ionicons
+        name="settings-outline"
+        size={16}
+        color={colors[theme].GRAY_300}
+      />
       <Text style={styles.settingButtonText}>설정</Text>
     </Pressable>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    gap: 5,
-    alignItems: 'center',
-  },
-  settingButtonText: {
-    fontWeight: '600',
-    fontSize: 15,
-    color: colors.GRAY_700,
-  },
-});
+const styling = (theme: ThemeMode) =>
+  StyleSheet.create({
+    container: {
+      flexDirection: 'row',
+      gap: 5,
+      alignItems: 'center',
+    },
+    settingButtonText: {
+      fontWeight: '600',
+      fontSize: 15,
+      color: colors[theme].GRAY_700,
+    },
+  });
 
 export default SettingButton;

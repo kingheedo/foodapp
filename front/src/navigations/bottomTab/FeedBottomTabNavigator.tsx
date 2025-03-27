@@ -19,6 +19,8 @@ import {
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {MainDrawerParamList} from '../drawer/MainDrawerNavigator';
 import FeedStackNavigator from '../stack/FeedStackNavigator';
+import useThemeStore from '@/store/useThemeStore';
+import {ThemeMode} from '@/types/common';
 
 export type FeedBottomTabParmList = {
   [feedBottomTabNavigations.FEED_HOME]: {
@@ -38,27 +40,31 @@ type FeedBottomTabNavigatorProps = CompositeNavigationProp<
 const getScreenOptions = ({
   route,
   navigation,
+  theme,
 }: {
   route: RouteProp<FeedBottomTabParmList>;
   navigation: FeedBottomTabNavigatorProps;
+  theme: ThemeMode;
 }): BottomTabNavigationOptions => ({
   tabBarShowLabel: false,
   headerTitleAlign: 'center',
   headerStyle: {
-    backgroundColor: colors.WHITE,
-    shadowColor: colors.GRAY_200,
+    backgroundColor: colors[theme].WHITE,
+    shadowColor: colors[theme].GRAY_200,
   },
   headerTitleStyle: {
     fontSize: 15,
   },
-  headerTintColor: colors.BLACK,
-  tabBarActiveTintColor: colors.CYAN_700,
+  headerTintColor: colors[theme].BLACK,
+  tabBarActiveTintColor: colors[theme].CYAN_700,
   tabBarStyle: {
-    backgroundColor: colors.WHITE,
-    borderTopColor: colors.GRAY_200,
+    backgroundColor: colors[theme].WHITE,
+    borderTopColor: colors[theme].GRAY_200,
     borderTopWidth: StyleSheet.hairlineWidth,
   },
   tabBarIcon: ({focused}) => {
+    const {theme} = useThemeStore();
+
     let iconName = '';
     switch (route.name) {
       case feedBottomTabNavigations.FEED_HOME:
@@ -76,7 +82,7 @@ const getScreenOptions = ({
       <Octicons
         name={iconName}
         size={25}
-        color={focused ? colors.CYAN_700 : colors.GRAY_300}
+        color={focused ? colors[theme].CYAN_700 : colors[theme].GRAY_300}
       />
     );
   },
@@ -84,10 +90,12 @@ const getScreenOptions = ({
 
 const Tab = createBottomTabNavigator<FeedBottomTabParmList>();
 const FeedBottomTabNavigator = () => {
+  const {theme} = useThemeStore();
+
   return (
     <Tab.Navigator
       screenOptions={({route, navigation}) =>
-        getScreenOptions({route, navigation})
+        getScreenOptions({route, navigation, theme})
       }>
       <Tab.Screen
         name={feedBottomTabNavigations.FEED_HOME}
@@ -101,7 +109,9 @@ const FeedBottomTabNavigator = () => {
                 marginLeft: 20,
               }}
               onPress={() => navigation.openDrawer()}
-              icon={<Ionicons name="menu" size={25} color={colors.BLACK} />}
+              icon={
+                <Ionicons name="menu" size={25} color={colors[theme].BLACK} />
+              }
             />
           ),
           tabBarStyle: (tabRoute => {
@@ -114,8 +124,8 @@ const FeedBottomTabNavigator = () => {
               return {display: 'none'};
             }
             return {
-              backgroundColor: colors.WHITE,
-              borderTopColor: colors.GRAY_200,
+              backgroundColor: colors[theme].WHITE,
+              borderTopColor: colors[theme].GRAY_200,
               borderTopWidth: StyleSheet.hairlineWidth,
             };
           })(route),
@@ -129,7 +139,7 @@ const FeedBottomTabNavigator = () => {
             <Octicons
               name="search"
               size={25}
-              color={focused ? colors.CYAN_700 : colors.GRAY_300}
+              color={focused ? colors[theme].CYAN_700 : colors[theme].GRAY_300}
             />
           ),
           headerTitle: '',
@@ -143,7 +153,7 @@ const FeedBottomTabNavigator = () => {
           tabBarIcon: ({focused}) => (
             <Octicons
               name="star-fill"
-              color={focused ? colors.CYAN_700 : colors.GRAY_300}
+              color={focused ? colors[theme].CYAN_700 : colors[theme].GRAY_300}
               size={26}
             />
           ),
@@ -154,7 +164,9 @@ const FeedBottomTabNavigator = () => {
                 marginLeft: 20,
               }}
               onPress={() => navigation.openDrawer()}
-              icon={<Ionicons name="menu" size={25} color={colors.BLACK} />}
+              icon={
+                <Ionicons name="menu" size={25} color={colors[theme].BLACK} />
+              }
             />
           ),
         })}

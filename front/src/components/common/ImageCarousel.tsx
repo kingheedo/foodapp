@@ -16,6 +16,8 @@ import HeaderButton from './HeaderButton';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {FeedStackParmList} from '@/navigations/stack/FeedStackNavigator';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import useThemeStore from '@/store/useThemeStore';
+import {ThemeMode} from '@/types/common';
 
 interface ImageCarouselProps {
   images: ImageUri[];
@@ -29,6 +31,8 @@ const ImageCarousel = ({images, pressedIdx = 0}: ImageCarouselProps) => {
   const insets = useSafeAreaInsets();
   const [page, setPage] = useState(pressedIdx);
   const [initialIndex, setInitialIndex] = useState(pressedIdx);
+  const {theme} = useThemeStore();
+  const styles = styling(theme);
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const newPage = Math.round(event.nativeEvent.contentOffset.x / deviceWidth);
@@ -45,7 +49,11 @@ const ImageCarousel = ({images, pressedIdx = 0}: ImageCarouselProps) => {
         style={[styles.backButton, {marginTop: insets.top + 10}]}
         onPress={() => navigation.goBack()}
         icon={
-          <MaterialIcons name="arrow-back" size={30} color={colors.WHITE} />
+          <MaterialIcons
+            name="arrow-back"
+            size={30}
+            color={colors[theme].WHITE}
+          />
         }
       />
       <FlatList
@@ -84,43 +92,44 @@ const ImageCarousel = ({images, pressedIdx = 0}: ImageCarouselProps) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    position: 'relative',
-    flex: 1,
-    alignItems: 'center',
-    backgroundColor: colors.WHITE,
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-  },
-  backButton: {
-    position: 'absolute',
-    left: 20,
-    zIndex: 1,
-    backgroundColor: colors.CYAN_700,
-    width: 40,
-    height: 40,
-    borderRadius: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  pageDotContainer: {
-    flexDirection: 'row',
-    position: 'absolute',
-    bottom: 10,
-  },
-  pageDot: {
-    width: 8,
-    height: 8,
-    backgroundColor: colors.GRAY_200,
-    margin: 4,
-    borderRadius: 4,
-  },
-  currenPageDot: {
-    backgroundColor: colors.CYAN_700,
-  },
-});
+const styling = (theme: ThemeMode) =>
+  StyleSheet.create({
+    container: {
+      position: 'relative',
+      flex: 1,
+      alignItems: 'center',
+      backgroundColor: colors[theme].WHITE,
+    },
+    image: {
+      width: '100%',
+      height: '100%',
+    },
+    backButton: {
+      position: 'absolute',
+      left: 20,
+      zIndex: 1,
+      backgroundColor: colors[theme].CYAN_700,
+      width: 40,
+      height: 40,
+      borderRadius: 40,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    pageDotContainer: {
+      flexDirection: 'row',
+      position: 'absolute',
+      bottom: 10,
+    },
+    pageDot: {
+      width: 8,
+      height: 8,
+      backgroundColor: colors[theme].GRAY_200,
+      margin: 4,
+      borderRadius: 4,
+    },
+    currenPageDot: {
+      backgroundColor: colors[theme].CYAN_700,
+    },
+  });
 
 export default ImageCarousel;

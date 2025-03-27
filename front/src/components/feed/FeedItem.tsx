@@ -1,6 +1,8 @@
 import {ResponsePost, ResponseSinglePost} from '@/api';
 import {colors, feedNavigations} from '@/constants';
 import {FeedStackParmList} from '@/navigations/stack/FeedStackNavigator';
+import useThemeStore from '@/store/useThemeStore';
+import {ThemeMode} from '@/types/common';
 import backUrl from '@/utils/backUrl';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -21,6 +23,8 @@ interface FeedItemProps {
 
 const FeedItem = ({post}: FeedItemProps) => {
   const navigation = useNavigation<StackNavigationProp<FeedStackParmList>>();
+  const {theme} = useThemeStore();
+  const styles = styling(theme);
 
   const handleDetailScreen = () => {
     navigation.navigate(feedNavigations.FEED_DETAIL, {
@@ -62,45 +66,46 @@ const FeedItem = ({post}: FeedItemProps) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    margin: 5,
-    marginVertical: 12,
-  },
-  imageContainer: {
-    width: Dimensions.get('screen').width / 2 - 25,
-    height: Dimensions.get('screen').width / 2 - 25,
-  },
-  emptyImageContainer: {
-    borderRadius: 5,
-    borderColor: colors.GRAY_300,
-    borderWidth: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 5,
-  },
-  infoContainer: {
-    marginTop: 7,
-    gap: 5,
-  },
-  dateText: {
-    color: colors.PINK_700,
-    fontWeight: '600',
-    fontSize: 12,
-  },
-  titleText: {
-    color: colors.BLACK,
-    fontWeight: '500',
-  },
-  description: {
-    color: colors.GRAY_500,
-    fontSize: 13,
-  },
-});
+const styling = (theme: ThemeMode) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      margin: 5,
+      marginVertical: 12,
+    },
+    imageContainer: {
+      width: Dimensions.get('screen').width / 2 - 25,
+      height: Dimensions.get('screen').width / 2 - 25,
+    },
+    emptyImageContainer: {
+      borderRadius: 5,
+      borderColor: colors[theme].GRAY_300,
+      borderWidth: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    image: {
+      width: '100%',
+      height: '100%',
+      borderRadius: 5,
+    },
+    infoContainer: {
+      marginTop: 7,
+      gap: 5,
+    },
+    dateText: {
+      color: colors[theme].PINK_700,
+      fontWeight: '600',
+      fontSize: 12,
+    },
+    titleText: {
+      color: colors[theme].BLACK,
+      fontWeight: '500',
+    },
+    description: {
+      color: colors[theme].GRAY_500,
+      fontSize: 13,
+    },
+  });
 
 export default FeedItem;

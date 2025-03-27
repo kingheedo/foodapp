@@ -4,6 +4,8 @@ import React from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import PreviewImageList from '@/components/common/PreviewImageList';
+import {ThemeMode} from '@/types/common';
+import useThemeStore from '@/store/useThemeStore';
 
 interface IPostImageFieldProps {
   imageUris: ImageUri[];
@@ -18,6 +20,9 @@ const PostImageField = ({
   handleDelete,
   handleMove,
 }: IPostImageFieldProps) => {
+  const {theme} = useThemeStore();
+  const styles = styling(theme);
+
   return (
     <View style={styles.container}>
       <View style={[styles.addImage]}>
@@ -27,7 +32,7 @@ const PostImageField = ({
             pressed && styles.addImagePressed,
           ]}
           onPress={handleImageLibrary}>
-          <Ionicons name="camera" size={20} color={colors.GRAY_500} />
+          <Ionicons name="camera" size={20} color={colors[theme].GRAY_500} />
           <Text>사진 추가</Text>
         </Pressable>
       </View>
@@ -41,28 +46,29 @@ const PostImageField = ({
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    gap: 15,
-  },
+const styling = (theme: ThemeMode) =>
+  StyleSheet.create({
+    container: {
+      flexDirection: 'row',
+      gap: 15,
+    },
 
-  square: {
-    width: 70,
-    height: 70,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+    square: {
+      width: 70,
+      height: 70,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
 
-  addImage: {
-    borderWidth: 1.5,
-    borderStyle: 'dotted',
-    borderColor: colors.GRAY_300,
-  },
+    addImage: {
+      borderWidth: 1.5,
+      borderStyle: 'dotted',
+      borderColor: colors[theme].GRAY_300,
+    },
 
-  addImagePressed: {
-    opacity: 0.5,
-  },
-});
+    addImagePressed: {
+      opacity: 0.5,
+    },
+  });
 
 export default PostImageField;

@@ -13,10 +13,15 @@ import {authNavigations, colors} from '@/constants';
 import {AuthStackParamList} from '@/navigations/stack/AuthStackNavigator';
 import CustomButton from '@/components/common/CustomButton';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import useThemeStore from '@/store/useThemeStore';
+import {ThemeMode} from '@/types/common';
 
 interface IAuthHomeScreenProps extends StackScreenProps<AuthStackParamList> {}
 
 const AuthHomeScreen = ({navigation}: IAuthHomeScreenProps) => {
+  const {theme} = useThemeStore();
+  const styles = styling(theme);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.imageContainer}>
@@ -47,39 +52,40 @@ const AuthHomeScreen = ({navigation}: IAuthHomeScreenProps) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    margin: 30,
-    alignItems: 'center',
-  },
-  imageContainer: {
-    flex: 1.5,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: Dimensions.get('screen').width / 2,
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-  },
-  buttonContainer: {
-    flex: 1,
-    alignItems: 'center',
-    gap: 10,
-  },
-  kakaoButtonContainer: {
-    backgroundColor: '#fee503',
-  },
-  kakaoButtonText: {
-    color: '#181600',
-  },
-  emailSignupText: {
-    textDecorationLine: 'underline',
-    fontWeight: '500',
-    padding: 10,
-    color: colors.BLACK,
-  },
-});
+const styling = (theme: ThemeMode) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      margin: 30,
+      alignItems: 'center',
+    },
+    imageContainer: {
+      flex: 1.5,
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: Dimensions.get('screen').width / 2,
+    },
+    image: {
+      width: '100%',
+      height: '100%',
+    },
+    buttonContainer: {
+      flex: 1,
+      alignItems: 'center',
+      gap: 10,
+    },
+    kakaoButtonContainer: {
+      backgroundColor: '#fee503',
+    },
+    kakaoButtonText: {
+      color: '#181600',
+    },
+    emailSignupText: {
+      textDecorationLine: 'underline',
+      fontWeight: '500',
+      padding: 10,
+      color: colors[theme].BLACK,
+    },
+  });
 
 export default AuthHomeScreen;

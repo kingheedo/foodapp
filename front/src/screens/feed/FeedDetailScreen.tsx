@@ -38,6 +38,8 @@ import useDetailPostStore from '@/store/useDetailPostStore';
 import FeedDetailOption from '@/components/feed/FeedDetailOption';
 import useMutateFavoritePost from '@/hooks/queries/useMutateFavoritePost';
 import useAuth from '@/hooks/queries/useAuth';
+import useThemeStore from '@/store/useThemeStore';
+import {ThemeMode} from '@/types/common';
 
 type FeedDetailScreenProps = CompositeScreenProps<
   StackScreenProps<FeedStackParmList, typeof feedNavigations.FEED_DETAIL>,
@@ -53,6 +55,8 @@ const FeedDetailScreen = ({navigation, route}: FeedDetailScreenProps) => {
   const {setMoveLocation} = useLocationStore();
   const {setDetailPost} = useDetailPostStore();
   const updateFavoritePost = useMutateFavoritePost();
+  const {theme} = useThemeStore();
+  const styles = styling(theme);
 
   /** 게시물 즐겨찾기 핸들러 */
   const handleFavorite = () => {
@@ -110,7 +114,7 @@ const FeedDetailScreen = ({navigation, route}: FeedDetailScreenProps) => {
                 <MaterialIcons
                   name="arrow-back-ios"
                   size={30}
-                  color={colors.WHITE}
+                  color={colors[theme].WHITE}
                 />
               }
             />
@@ -123,7 +127,7 @@ const FeedDetailScreen = ({navigation, route}: FeedDetailScreenProps) => {
                 <Ionicons
                   name="ellipsis-vertical"
                   size={30}
-                  color={colors.WHITE}
+                  color={colors[theme].WHITE}
                 />
               }
             />
@@ -148,7 +152,11 @@ const FeedDetailScreen = ({navigation, route}: FeedDetailScreenProps) => {
             </View>
             <View style={styles.cardContentContainer}>
               <View style={styles.cardSubTitleContainer}>
-                <Octicons name="location" color={colors.GRAY_500} size={10} />
+                <Octicons
+                  name="location"
+                  color={colors[theme].GRAY_500}
+                  size={10}
+                />
                 <Text style={styles.cardSubTitleText} ellipsizeMode="tail">
                   {post.address}
                 </Text>
@@ -221,7 +229,9 @@ const FeedDetailScreen = ({navigation, route}: FeedDetailScreenProps) => {
           <View style={[styles.utilityItem, styles.utilityIconContainer]}>
             <Octicons
               name="star-fill"
-              color={post.isFavorite ? colors.YELLOW_500 : colors.WHITE}
+              color={
+                post.isFavorite ? colors[theme].YELLOW_500 : colors[theme].WHITE
+              }
               size={30}
             />
           </View>
@@ -237,137 +247,138 @@ const FeedDetailScreen = ({navigation, route}: FeedDetailScreenProps) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    position: 'relative',
-    flex: 1,
-  },
-  headerContainer: {
-    position: 'absolute',
-    zIndex: 1,
-    width: '100%',
-    paddingHorizontal: 20,
-    top: 16,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  cardContainer: {
-    backgroundColor: colors.WHITE,
-  },
-  cardMediaContainer: {
-    width: Dimensions.get('screen').width,
-    height: Dimensions.get('screen').width,
-    backgroundColor: colors.GRAY_200,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  mainImage: {
-    width: '100%',
-    height: '100%',
-  },
-  cardContentContainer: {
-    padding: 20,
-  },
-  cardSubTitleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    marginBottom: 10,
-  },
-  cardSubTitleText: {
-    fontSize: 12,
-    color: colors.GRAY_500,
-  },
-  cardSubTitle: {},
-  cardTitle: {},
-  cardTitleText: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: colors.BLACK,
-  },
-  cardSubInfoContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    flexWrap: 'wrap',
-    marginTop: 20,
-  },
-  cardSubInfoRow: {
-    flexDirection: 'row',
-    gap: 8,
-    flexWrap: 'nowrap',
-    flexBasis: '48%',
-    alignItems: 'center',
-  },
-  cardSubInfoRowLeft: {
-    color: colors.BLACK,
-    fontWeight: '500',
-  },
-  cardSubInfoRowRight: {
-    color: colors.PINK_500,
-  },
-  marker: {
-    width: 10,
-    height: 10,
-    borderRadius: 10,
-  },
-  emptyCategoryContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.GRAY_300,
-    padding: 2,
-    borderRadius: 2,
-  },
-  emptyCategoryText: {},
-  descriptionContainer: {
-    marginTop: 20,
-  },
-  descriptionText: {
-    color: colors.BLACK,
-    lineHeight: 25,
-    fontSize: 16,
-  },
-  imageListContainer: {
-    marginVertical: 10,
-    backgroundColor: colors.WHITE,
-    padding: 12,
-  },
-  utilityContainer: {
-    position: 'absolute',
-    bottom: 0,
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    backgroundColor: colors.WHITE,
-    gap: 8,
-    padding: 10,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.GRAY_200,
-  },
-  utilityContainerNoInsets: {
-    paddingBottom: 10,
-  },
-  utilityItem: {
-    borderRadius: 3,
-    backgroundColor: colors.CYAN_700,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  utilityLocationItem: {
-    width: Dimensions.get('screen').width / 2,
-  },
-  utilityIconContainer: {
-    height: '100%',
-    paddingHorizontal: 5,
-  },
-  utilityIconContainerPressed: {
-    opacity: 0.5,
-  },
-  utilityText: {
-    color: colors.WHITE,
-    fontSize: 18,
-    fontWeight: '600',
-  },
-});
+const styling = (theme: ThemeMode) =>
+  StyleSheet.create({
+    container: {
+      position: 'relative',
+      flex: 1,
+    },
+    headerContainer: {
+      position: 'absolute',
+      zIndex: 1,
+      width: '100%',
+      paddingHorizontal: 20,
+      top: 16,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    cardContainer: {
+      backgroundColor: colors[theme].WHITE,
+    },
+    cardMediaContainer: {
+      width: Dimensions.get('screen').width,
+      height: Dimensions.get('screen').width,
+      backgroundColor: colors[theme].GRAY_200,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    mainImage: {
+      width: '100%',
+      height: '100%',
+    },
+    cardContentContainer: {
+      padding: 20,
+    },
+    cardSubTitleContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+      marginBottom: 10,
+    },
+    cardSubTitleText: {
+      fontSize: 12,
+      color: colors[theme].GRAY_500,
+    },
+    cardSubTitle: {},
+    cardTitle: {},
+    cardTitleText: {
+      fontSize: 24,
+      fontWeight: '600',
+      color: colors[theme].BLACK,
+    },
+    cardSubInfoContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      flexWrap: 'wrap',
+      marginTop: 20,
+    },
+    cardSubInfoRow: {
+      flexDirection: 'row',
+      gap: 8,
+      flexWrap: 'nowrap',
+      flexBasis: '48%',
+      alignItems: 'center',
+    },
+    cardSubInfoRowLeft: {
+      color: colors[theme].BLACK,
+      fontWeight: '500',
+    },
+    cardSubInfoRowRight: {
+      color: colors[theme].PINK_500,
+    },
+    marker: {
+      width: 10,
+      height: 10,
+      borderRadius: 10,
+    },
+    emptyCategoryContainer: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: colors[theme].GRAY_300,
+      padding: 2,
+      borderRadius: 2,
+    },
+    emptyCategoryText: {},
+    descriptionContainer: {
+      marginTop: 20,
+    },
+    descriptionText: {
+      color: colors[theme].BLACK,
+      lineHeight: 25,
+      fontSize: 16,
+    },
+    imageListContainer: {
+      marginVertical: 10,
+      backgroundColor: colors[theme].WHITE,
+      padding: 12,
+    },
+    utilityContainer: {
+      position: 'absolute',
+      bottom: 0,
+      width: '100%',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+      backgroundColor: colors[theme].WHITE,
+      gap: 8,
+      padding: 10,
+      borderTopWidth: StyleSheet.hairlineWidth,
+      borderColor: colors[theme].GRAY_200,
+    },
+    utilityContainerNoInsets: {
+      paddingBottom: 10,
+    },
+    utilityItem: {
+      borderRadius: 3,
+      backgroundColor: colors[theme].CYAN_700,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    utilityLocationItem: {
+      width: Dimensions.get('screen').width / 2,
+    },
+    utilityIconContainer: {
+      height: '100%',
+      paddingHorizontal: 5,
+    },
+    utilityIconContainerPressed: {
+      opacity: 0.5,
+    },
+    utilityText: {
+      color: colors[theme].WHITE,
+      fontSize: 18,
+      fontWeight: '600',
+    },
+  });
 
 export default FeedDetailScreen;

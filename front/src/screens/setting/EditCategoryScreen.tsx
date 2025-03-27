@@ -3,6 +3,8 @@ import {colors, errorMessages} from '@/constants';
 import useAuth from '@/hooks/queries/useAuth';
 import useForm from '@/hooks/useForm';
 import {SettingStackParamList} from '@/navigations/stack/SettingStackNavigator';
+import useThemeStore from '@/store/useThemeStore';
+import {ThemeMode} from '@/types/common';
 import {validateEditCategory} from '@/utils';
 import {StackScreenProps} from '@react-navigation/stack';
 import React, {useEffect} from 'react';
@@ -22,6 +24,9 @@ interface EditCategoryScreenProps
 const EditCategoryScreen = ({navigation}: EditCategoryScreenProps) => {
   const {updateCategory} = useAuth();
   const {getProfileQuery} = useAuth();
+  const {theme} = useThemeStore();
+  const styles = styling(theme);
+
   const {categories} = getProfileQuery.data ?? {};
 
   const editCategoryForm = useForm({
@@ -92,32 +97,33 @@ const EditCategoryScreen = ({navigation}: EditCategoryScreenProps) => {
   );
 };
 
-const styles = StyleSheet.create({
-  headerRightButton: {
-    width: 50,
-    alignItems: 'center',
-  },
-  container: {
-    flex: 1,
-    backgroundColor: colors.WHITE,
-  },
-  scrollContainer: {
-    flex: 1,
-    padding: 20,
-    marginBottom: 10,
-  },
-  textContainer: {
-    borderWidth: 1,
-    borderColor: colors.RED_500,
-    paddingVertical: 20,
-    paddingHorizontal: 18,
-    marginTop: 10,
-    marginBottom: 30,
-  },
-  text: {
-    color: colors.RED_500,
-    textAlign: 'center',
-  },
-});
+const styling = (theme: ThemeMode) =>
+  StyleSheet.create({
+    headerRightButton: {
+      width: 50,
+      alignItems: 'center',
+    },
+    container: {
+      flex: 1,
+      backgroundColor: colors[theme].WHITE,
+    },
+    scrollContainer: {
+      flex: 1,
+      padding: 20,
+      marginBottom: 10,
+    },
+    textContainer: {
+      borderWidth: 1,
+      borderColor: colors[theme].RED_500,
+      paddingVertical: 20,
+      paddingHorizontal: 18,
+      marginTop: 10,
+      marginBottom: 30,
+    },
+    text: {
+      color: colors[theme].RED_500,
+      textAlign: 'center',
+    },
+  });
 
 export default EditCategoryScreen;

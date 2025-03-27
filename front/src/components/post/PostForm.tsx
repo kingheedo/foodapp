@@ -31,6 +31,7 @@ import {validateAddPost} from '@/utils';
 import useMutateCreatePost from '@/hooks/queries/useMutateCreatePost';
 import useDetailPostStore from '@/store/useDetailPostStore';
 import useMutateUpdatePost from '@/hooks/queries/useMutateUpdatePost';
+import useThemeStore from '@/store/useThemeStore';
 
 interface IPostFormProps {
   isEdit?: boolean;
@@ -64,6 +65,7 @@ const PostForm = ({isEdit = false, location}: IPostFormProps) => {
   usePermission(PermissionType.PHOTO);
   const navigation = useNavigation<StackNavigationProp<FeedStackParmList>>();
   const datePickerModal = useModal();
+  const {theme} = useThemeStore();
 
   const createPost = useMutateCreatePost();
   const updatePost = useMutateUpdatePost();
@@ -145,7 +147,11 @@ const PostForm = ({isEdit = false, location}: IPostFormProps) => {
             value={address}
             disabled
             icon={
-              <Octicons name="location" color={colors.GRAY_500} size={16} />
+              <Octicons
+                name="location"
+                color={colors[theme].GRAY_500}
+                size={16}
+              />
             }
           />
           <CustomButton

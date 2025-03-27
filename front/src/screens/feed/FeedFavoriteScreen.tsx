@@ -1,6 +1,8 @@
 import FeedList from '@/components/feed/FeedList';
 import {colors} from '@/constants';
 import useGetFavoritePosts from '@/hooks/queries/useGetFavoritePosts';
+import useThemeStore from '@/store/useThemeStore';
+import {ThemeMode} from '@/types/common';
 import React from 'react';
 import {SafeAreaView, StyleSheet} from 'react-native';
 
@@ -12,6 +14,8 @@ const FeedFavoriteScreen = () => {
     isFetchingNextPage,
     refetch,
   } = useGetFavoritePosts();
+  const {theme} = useThemeStore();
+  const styles = styling(theme);
 
   const handleNextPage = () => {
     if (hasNextPage && !isFetchingNextPage) {
@@ -35,11 +39,12 @@ const FeedFavoriteScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.WHITE,
-  },
-});
+const styling = (theme: ThemeMode) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors[theme].WHITE,
+    },
+  });
 
 export default FeedFavoriteScreen;

@@ -8,6 +8,8 @@ import {
   View,
 } from 'react-native';
 import {colors} from '@/constants';
+import useThemeStore from '@/store/useThemeStore';
+import {ThemeMode} from '@/types/common';
 
 interface IInputFieldProps extends TextInputProps {
   disabled?: boolean;
@@ -29,6 +31,8 @@ const InputField = forwardRef(
     }: IInputFieldProps,
     ref?: ForwardedRef<TextInput>,
   ) => {
+    const {theme} = useThemeStore();
+    const styles = styling(theme);
     return (
       <View>
         <View
@@ -43,7 +47,7 @@ const InputField = forwardRef(
           <TextInput
             ref={ref}
             editable={!disabled}
-            placeholderTextColor={colors.GRAY_500}
+            placeholderTextColor={colors[theme].GRAY_500}
             style={[styles.input, disabled && styles.disabled]}
             autoCapitalize="none"
             spellCheck={false}
@@ -57,39 +61,40 @@ const InputField = forwardRef(
   },
 );
 
-const styles = StyleSheet.create({
-  container: {
-    borderWidth: 1,
-    borderColor: colors.GRAY_200,
-  },
-  innerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    gap: 5,
-  },
-  multiline: {
-    paddingBottom: deviceHeight > 700 ? 45 : 30,
-  },
-  input: {
-    backgroundColor: colors.WHITE,
-    fontSize: 16,
-    color: colors.BLACK,
-    padding: deviceHeight > 700 ? 15 : 10,
-  },
-  disabled: {
-    backgroundColor: colors.GRAY_200,
-    color: colors.GRAY_700,
-  },
-  inputError: {
-    borderWidth: 1,
-    borderColor: colors.RED_300,
-  },
-  error: {
-    color: colors.RED_500,
-    fontSize: 12,
-    paddingTop: 5,
-  },
-});
+const styling = (theme: ThemeMode) =>
+  StyleSheet.create({
+    container: {
+      borderWidth: 1,
+      borderColor: colors[theme].GRAY_200,
+    },
+    innerContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: 10,
+      gap: 5,
+    },
+    multiline: {
+      paddingBottom: deviceHeight > 700 ? 45 : 30,
+    },
+    input: {
+      backgroundColor: colors[theme].WHITE,
+      fontSize: 16,
+      color: colors[theme].BLACK,
+      padding: deviceHeight > 700 ? 15 : 10,
+    },
+    disabled: {
+      backgroundColor: colors[theme].GRAY_200,
+      color: colors[theme].GRAY_700,
+    },
+    inputError: {
+      borderWidth: 1,
+      borderColor: colors[theme].RED_300,
+    },
+    error: {
+      color: colors[theme].RED_500,
+      fontSize: 12,
+      paddingTop: 5,
+    },
+  });
 
 export default InputField;

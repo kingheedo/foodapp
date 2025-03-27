@@ -9,6 +9,7 @@ import {Pressable, StyleSheet, Text, View} from 'react-native';
 import DeleteAccountScreen from '@/screens/setting/DeleteAccountScreen';
 import DraweHeaderButton from '@/components/common/DraweHeaderButton';
 import useAuth from '@/hooks/queries/useAuth';
+import useThemeStore from '@/store/useThemeStore';
 
 export type SettingStackParamList = {
   [settingNavigatons.SETTING_HOME]: undefined;
@@ -20,20 +21,22 @@ export type SettingStackParamList = {
 const Stack = createStackNavigator<SettingStackParamList>();
 
 const SettingStackNavigator = () => {
+  const {theme} = useThemeStore();
+
   return (
     <Stack.Navigator
       screenOptions={{
         cardStyle: {
-          backgroundColor: colors.GRAY_100,
+          backgroundColor: colors[theme].GRAY_100,
         },
         headerStyle: {
           shadowColor: 'gray',
-          backgroundColor: colors.WHITE,
+          backgroundColor: colors[theme].WHITE,
         },
         headerTitleStyle: {
           fontSize: 15,
         },
-        headerTintColor: colors.BLACK,
+        headerTintColor: colors[theme].BLACK,
       }}>
       <Stack.Screen
         name={settingNavigatons.SETTING_HOME}

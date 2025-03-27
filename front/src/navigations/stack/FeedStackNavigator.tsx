@@ -2,13 +2,13 @@ import {colors, feedNavigations} from '@/constants';
 import FeedDetailScreen from '@/screens/feed/FeedDetailScreen';
 import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
-import {StyleSheet} from 'react-native';
 import EditPostScreen from '@/screens/feed/EditPostScreen';
 import {LatLng} from 'react-native-maps';
 import ImageZoomScreen from '@/components/feed/ImageZoomScreen';
 import FeedHomeScreen from '@/screens/feed/FeedHomeScreen';
 import HeaderButton from '@/components/common/HeaderButton';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import useThemeStore from '@/store/useThemeStore';
 
 export type FeedStackParmList = {
   [feedNavigations.FEED_HOME]: undefined;
@@ -19,15 +19,17 @@ export type FeedStackParmList = {
 
 const Stack = createStackNavigator<FeedStackParmList>();
 const FeedStackNavigator = () => {
+  const {theme} = useThemeStore();
+
   return (
     <Stack.Navigator
       screenOptions={{
         cardStyle: {
-          backgroundColor: colors.WHITE,
+          backgroundColor: colors[theme].WHITE,
         },
         headerStyle: {
           shadowColor: 'gray',
-          backgroundColor: colors.WHITE,
+          backgroundColor: colors[theme].WHITE,
         },
         headerTitleStyle: {
           fontSize: 15,
@@ -46,7 +48,9 @@ const FeedStackNavigator = () => {
                 marginLeft: 20,
               }}
               onPress={() => navigation.openDrawer()}
-              icon={<Ionicons name="menu" size={25} color={colors.BLACK} />}
+              icon={
+                <Ionicons name="menu" size={25} color={colors[theme].BLACK} />
+              }
             />
           ),
         })}
@@ -58,7 +62,7 @@ const FeedStackNavigator = () => {
           headerTitle: '',
           headerShown: false,
           cardStyle: {
-            backgroundColor: colors.GRAY_100,
+            backgroundColor: colors[theme].GRAY_100,
           },
         }}
       />
@@ -80,7 +84,5 @@ const FeedStackNavigator = () => {
     </Stack.Navigator>
   );
 };
-
-const styles = StyleSheet.create({});
 
 export default FeedStackNavigator;

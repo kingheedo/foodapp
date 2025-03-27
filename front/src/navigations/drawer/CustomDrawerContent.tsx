@@ -1,6 +1,8 @@
 import SettingButton from '@/components/setting/SettingButton';
 import {colors, mainNavigations} from '@/constants';
 import useAuth from '@/hooks/queries/useAuth';
+import useThemeStore from '@/store/useThemeStore';
+import {ThemeMode} from '@/types/common';
 import backUrl from '@/utils/backUrl';
 import {
   DrawerContentScrollView,
@@ -19,6 +21,9 @@ import {
 
 const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   const {getProfileQuery} = useAuth();
+  const {theme} = useThemeStore();
+  const styles = styling(theme);
+
   const {email, nickname, imageUri, kakaoImageUri} = getProfileQuery.data || {};
 
   return (
@@ -61,43 +66,44 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  contentContainer: {
-    backgroundColor: colors.WHITE,
-  },
-  userInfoContainer: {
-    alignItems: 'center',
-    marginTop: 15,
-    marginBottom: 30,
-    marginHorizontal: 15,
-  },
-  nameText: {
-    color: colors.BLACK,
-  },
-  userImageContainer: {
-    width: 70,
-    height: 70,
-    borderRadius: 35,
-    marginBottom: 10,
-  },
-  userImage: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 35,
-  },
-  bottomButtonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    gap: 5,
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-    borderTopWidth: 1,
-    borderTopColor: colors.GRAY_700,
-  },
-});
+const styling = (theme: ThemeMode) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+    contentContainer: {
+      backgroundColor: colors[theme].WHITE,
+    },
+    userInfoContainer: {
+      alignItems: 'center',
+      marginTop: 15,
+      marginBottom: 30,
+      marginHorizontal: 15,
+    },
+    nameText: {
+      color: colors[theme].BLACK,
+    },
+    userImageContainer: {
+      width: 70,
+      height: 70,
+      borderRadius: 35,
+      marginBottom: 10,
+    },
+    userImage: {
+      width: '100%',
+      height: '100%',
+      borderRadius: 35,
+    },
+    bottomButtonContainer: {
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      alignItems: 'center',
+      gap: 5,
+      paddingHorizontal: 20,
+      paddingVertical: 15,
+      borderTopWidth: 1,
+      borderTopColor: colors[theme].GRAY_700,
+    },
+  });
 
 export default CustomDrawerContent;

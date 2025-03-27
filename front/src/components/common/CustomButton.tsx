@@ -11,6 +11,8 @@ import {
   ViewStyle,
 } from 'react-native';
 import {colors} from '@/constants';
+import useThemeStore from '@/store/useThemeStore';
+import {ThemeMode} from '@/types/common';
 
 interface CustomButtonProps extends PressableProps {
   label: string;
@@ -34,6 +36,8 @@ const CustomButton = ({
   icon = null,
   ...props
 }: CustomButtonProps) => {
+  const {theme} = useThemeStore();
+  const styles = styling(theme);
   return (
     <Pressable
       disabled={inValid}
@@ -54,56 +58,57 @@ const CustomButton = ({
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    borderRadius: 3,
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  inValid: {
-    opacity: 0.5,
-  },
-  filled: {
-    backgroundColor: colors.CYAN_700,
-  },
-  outlined: {
-    borderColor: colors.CYAN_700,
-    borderWidth: 1,
-  },
-  filledPressed: {
-    backgroundColor: colors.CYAN_500,
-  },
-  outlinedPressed: {
-    borderColor: colors.CYAN_700,
-    borderWidth: 1,
-    opacity: 0.5,
-  },
-  large: {
-    width: '100%',
-    paddingVertical: deviceHeight > 700 ? 15 : 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-    gap: 5,
-  },
-  medium: {
-    width: '50%',
-    paddingVertical: deviceHeight > 700 ? 12 : 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-    gap: 5,
-  },
-  text: {
-    fontSize: 16,
-    fontWeight: 700,
-  },
-  filledText: {
-    color: colors.WHITE,
-  },
-  outlinedText: {
-    color: colors.CYAN_700,
-  },
-});
+const styling = (theme: ThemeMode) =>
+  StyleSheet.create({
+    container: {
+      borderRadius: 3,
+      justifyContent: 'center',
+      flexDirection: 'row',
+    },
+    inValid: {
+      opacity: 0.5,
+    },
+    filled: {
+      backgroundColor: colors[theme].CYAN_700,
+    },
+    outlined: {
+      borderColor: colors[theme].CYAN_700,
+      borderWidth: 1,
+    },
+    filledPressed: {
+      backgroundColor: colors[theme].CYAN_500,
+    },
+    outlinedPressed: {
+      borderColor: colors[theme].CYAN_700,
+      borderWidth: 1,
+      opacity: 0.5,
+    },
+    large: {
+      width: '100%',
+      paddingVertical: deviceHeight > 700 ? 15 : 12,
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexDirection: 'row',
+      gap: 5,
+    },
+    medium: {
+      width: '50%',
+      paddingVertical: deviceHeight > 700 ? 12 : 8,
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexDirection: 'row',
+      gap: 5,
+    },
+    text: {
+      fontSize: 16,
+      fontWeight: 700,
+    },
+    filledText: {
+      color: colors[theme].WHITE,
+    },
+    outlinedText: {
+      color: colors[theme].CYAN_700,
+    },
+  });
 
 export default CustomButton;

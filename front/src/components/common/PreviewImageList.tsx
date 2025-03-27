@@ -9,6 +9,8 @@ import {colors, feedNavigations} from '@/constants';
 import {v4 as uuidv4} from 'uuid';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {FeedStackParmList} from '@/navigations/stack/FeedStackNavigator';
+import useThemeStore from '@/store/useThemeStore';
+import {ThemeMode} from '@/types/common';
 
 interface PreviewImageListProps {
   imageUris: ImageUri[];
@@ -31,6 +33,9 @@ const PreviewImageList = ({
   handleMove,
 }: PreviewImageListProps) => {
   const navigation = useNavigation<NavigationProp<FeedStackParmList>>();
+  const {theme} = useThemeStore();
+  const styles = styling(theme);
+
   const handlePressImage = (index: number) => {
     if (zoomEnable) {
       navigation.navigate(feedNavigations.IMAGE_ZOOM, {
@@ -45,7 +50,7 @@ const PreviewImageList = ({
         <Pressable
           onPress={() => handleDelete && handleDelete(index)}
           style={styles.closeBtnContainer}>
-          <Ionicons name="close" size={16} color={colors.WHITE} />
+          <Ionicons name="close" size={16} color={colors[theme].WHITE} />
         </Pressable>
         <Image
           style={styles.previewImage}
@@ -55,12 +60,12 @@ const PreviewImageList = ({
         <Pressable
           style={styles.moveLeftBtn}
           onPress={() => handleMove && handleMove(index, index - 1)}>
-          <Octicons name="arrow-left" size={16} color={colors.WHITE} />
+          <Octicons name="arrow-left" size={16} color={colors[theme].WHITE} />
         </Pressable>
         <Pressable
           onPress={() => handleMove && handleMove(index, index + 1)}
           style={styles.moveRightBtn}>
-          <Octicons name="arrow-right" size={16} color={colors.WHITE} />
+          <Octicons name="arrow-right" size={16} color={colors[theme].WHITE} />
         </Pressable>
       </>
     ) : (
@@ -93,48 +98,49 @@ const PreviewImageList = ({
   );
 };
 
-const styles = StyleSheet.create({
-  imageContainer: {
-    flexDirection: 'row',
-    gap: 15,
-  },
-  square: {
-    width: 70,
-    height: 70,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  previewImage: {
-    width: '100%',
-    height: '100%',
-  },
-  closeBtnContainer: {
-    position: 'absolute',
-    backgroundColor: colors.BLACK,
-    zIndex: 1,
-    top: 0,
-    right: 0,
-    width: 16,
-    height: 16,
-  },
-  moveLeftBtn: {
-    position: 'absolute',
-    backgroundColor: colors.BLACK,
-    zIndex: 1,
-    width: 16,
-    height: 16,
-    left: 0,
-    bottom: 0,
-  },
-  moveRightBtn: {
-    position: 'absolute',
-    backgroundColor: colors.BLACK,
-    zIndex: 1,
-    width: 16,
-    height: 16,
-    right: 0,
-    bottom: 0,
-  },
-});
+const styling = (theme: ThemeMode) =>
+  StyleSheet.create({
+    imageContainer: {
+      flexDirection: 'row',
+      gap: 15,
+    },
+    square: {
+      width: 70,
+      height: 70,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    previewImage: {
+      width: '100%',
+      height: '100%',
+    },
+    closeBtnContainer: {
+      position: 'absolute',
+      backgroundColor: colors[theme].BLACK,
+      zIndex: 1,
+      top: 0,
+      right: 0,
+      width: 16,
+      height: 16,
+    },
+    moveLeftBtn: {
+      position: 'absolute',
+      backgroundColor: colors[theme].BLACK,
+      zIndex: 1,
+      width: 16,
+      height: 16,
+      left: 0,
+      bottom: 0,
+    },
+    moveRightBtn: {
+      position: 'absolute',
+      backgroundColor: colors[theme].BLACK,
+      zIndex: 1,
+      width: 16,
+      height: 16,
+      right: 0,
+      bottom: 0,
+    },
+  });
 
 export default PreviewImageList;

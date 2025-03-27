@@ -6,8 +6,10 @@ import DayOfWeeks from './DayOfWeeks';
 import {MonthYear} from '@/utils/date';
 import useModal from '@/hooks/useModal';
 import DateList from './DateList';
-import { ResponseCalendarPost } from '@/api';
+import {ResponseCalendarPost} from '@/api';
 import YearsModal from './YearsModal';
+import useThemeStore from '@/store/useThemeStore';
+import {ThemeMode} from '@/types/common';
 interface CalendarProps {
   monthYear: MonthYear;
   selectedDate: string;
@@ -25,6 +27,8 @@ const Calendar = ({
 }: CalendarProps) => {
   const {month, year, wholeDates} = monthYear;
   const monthYearModal = useModal();
+  const {theme} = useThemeStore();
+  const styles = styling(theme);
 
   /** 연도 선택시 해당 년도로 변경 */
   const handleYear = (selectedYear: number) => {
@@ -35,7 +39,7 @@ const Calendar = ({
   /** 월,년도 토글 버튼 클릭 시 */
   const handleMonthYearToggle = () => {
     monthYearModal.handleOpen();
-  }
+  };
 
   return (
     <>
@@ -46,7 +50,7 @@ const Calendar = ({
           <MaterialIcons
             name="keyboard-arrow-left"
             size={25}
-            color={colors.BLACK}
+            color={colors[theme].BLACK}
           />
         </Pressable>
         <Pressable
@@ -58,7 +62,7 @@ const Calendar = ({
           <MaterialIcons
             name="keyboard-arrow-down"
             size={20}
-            color={colors.GRAY_500}
+            color={colors[theme].GRAY_500}
           />
         </Pressable>
         <Pressable
@@ -67,7 +71,7 @@ const Calendar = ({
           <MaterialIcons
             name="keyboard-arrow-right"
             size={25}
-            color={colors.BLACK}
+            color={colors[theme].BLACK}
           />
         </Pressable>
       </View>
@@ -78,8 +82,8 @@ const Calendar = ({
         selectedDate={selectedDate}
         handlePressDate={handlePressDate}
       />
-      <YearsModal 
-        open={monthYearModal.open} 
+      <YearsModal
+        open={monthYearModal.open}
         handleClose={monthYearModal.handleClose}
         currentYear={monthYear.year}
         handleYear={handleYear}
@@ -88,27 +92,28 @@ const Calendar = ({
   );
 };
 
-const styles = StyleSheet.create({
-  headerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginHorizontal: 25,
-    marginVertical: 16,
-  },
-  monthYearContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 10,
-  },
-  monthButtonContainer: {
-    padding: 10,
-  },
-  monthYearText: {
-    fontSize: 18,
-    fontWeight: '500',
-    color: colors.BLACK,
-  },
-});
+const styling = (theme: ThemeMode) =>
+  StyleSheet.create({
+    headerContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginHorizontal: 25,
+      marginVertical: 16,
+    },
+    monthYearContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      padding: 10,
+    },
+    monthButtonContainer: {
+      padding: 10,
+    },
+    monthYearText: {
+      fontSize: 18,
+      fontWeight: '500',
+      color: colors[theme].BLACK,
+    },
+  });
 
 export default Calendar;

@@ -1,4 +1,6 @@
 import {colors} from '@/constants';
+import useThemeStore from '@/store/useThemeStore';
+import {ThemeMode} from '@/types/common';
 import React, {ReactNode} from 'react';
 import {
   Pressable,
@@ -25,31 +27,37 @@ const SettingItem = ({
   isLast = false,
   ...props
 }: SettingItemProps) => {
+  const {theme} = useThemeStore();
+  const styles = styling(theme);
+
   return (
     <Pressable
       style={[styles.itemContainer, isLast && styles.lastItemContainer]}
       {...props}>
       {icon}
-      <Text style={textStyle}>{label}</Text>
+      <Text style={[textStyle, styles.itemStyle]}>{label}</Text>
     </Pressable>
   );
 };
 
-const styles = StyleSheet.create({
-  itemContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderTopWidth: 1,
-    backgroundColor: colors.WHITE,
-    borderBlockColor: '#D6D6D6',
-    color: colors.BLACK,
-  },
-  lastItemContainer: {
-    borderBottomWidth: 1,
-  },
-});
+const styling = (theme: ThemeMode) =>
+  StyleSheet.create({
+    itemContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 4,
+      paddingVertical: 10,
+      paddingHorizontal: 20,
+      borderTopWidth: 1,
+      backgroundColor: colors[theme].WHITE,
+      borderBlockColor: '#D6D6D6',
+    },
+    lastItemContainer: {
+      borderBottomWidth: 1,
+    },
+    itemStyle: {
+      color: colors[theme].BLACK,
+    },
+  });
 
 export default SettingItem;

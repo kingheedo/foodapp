@@ -24,12 +24,16 @@ import {validateEditProfile} from '@/utils';
 import useDeviceImage from '@/hooks/useDeviceImage';
 import backUrl from '@/utils/backUrl';
 import Toast from 'react-native-toast-message';
+import useThemeStore from '@/store/useThemeStore';
+import {ThemeMode} from '@/types/common';
 
 type EditProfileScreenProps = StackScreenProps<SettingStackParamList>;
 
 const EditProfileScreen = ({navigation}: EditProfileScreenProps) => {
   const {getProfileQuery, updateProfileMutation} = useAuth();
   const {nickname, imageUri, kakaoImageUri} = getProfileQuery.data ?? {};
+  const {theme} = useThemeStore();
+  const styles = styling(theme);
 
   const editProfile = useForm({
     initialValue: {
@@ -110,7 +114,7 @@ const EditProfileScreen = ({navigation}: EditProfileScreenProps) => {
               <View style={[styles.blankProfileImage, styles.profileImage]}>
                 <Ionicons
                   name="camera-outline"
-                  color={colors.GRAY_500}
+                  color={colors[theme].GRAY_500}
                   size={24}
                 />
               </View>
@@ -137,49 +141,50 @@ const EditProfileScreen = ({navigation}: EditProfileScreenProps) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.WHITE,
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-  },
-  headerRightButtonContainer: {
-    width: 50,
-    alignItems: 'center',
-  },
-  profileContainer: {
-    marginTop: 30,
-    flex: 1,
-    alignItems: 'center',
-    gap: 60,
-  },
-  profileImageContainer: {
-    width: 100,
-    height: 100,
-  },
-  profileImage: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 50,
-  },
-  blankProfileImage: {
-    borderWidth: 1,
-    borderColor: colors.GRAY_200,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+const styling = (theme: ThemeMode) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors[theme].WHITE,
+      paddingHorizontal: 20,
+      paddingBottom: 20,
+    },
+    headerRightButtonContainer: {
+      width: 50,
+      alignItems: 'center',
+    },
+    profileContainer: {
+      marginTop: 30,
+      flex: 1,
+      alignItems: 'center',
+      gap: 60,
+    },
+    profileImageContainer: {
+      width: 100,
+      height: 100,
+    },
+    profileImage: {
+      width: '100%',
+      height: '100%',
+      borderRadius: 50,
+    },
+    blankProfileImage: {
+      borderWidth: 1,
+      borderColor: colors[theme].GRAY_200,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
 
-  nameInputContainer: {
-    width: '100%',
-  },
-  deleteAccount: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  },
-  deleteAccountText: {
-    color: colors.RED_500,
-  },
-});
+    nameInputContainer: {
+      width: '100%',
+    },
+    deleteAccount: {
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+    },
+    deleteAccountText: {
+      color: colors[theme].RED_500,
+    },
+  });
 
 export default EditProfileScreen;

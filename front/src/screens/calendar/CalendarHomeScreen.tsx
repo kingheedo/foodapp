@@ -3,8 +3,10 @@ import SelectedPostList from '@/components/calendar/SelectedPostList';
 import HeaderButton from '@/components/common/HeaderButton';
 import {colors} from '@/constants';
 import useGetCalendarPosts from '@/hooks/queries/useGetCalendarPosts';
+import useThemeStore from '@/store/useThemeStore';
+import {ThemeMode} from '@/types/common';
 import {getMonthYearDetails, getNewMonthYear, getToday} from '@/utils/date';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useMemo, useState} from 'react';
 import {SafeAreaView} from 'react-native';
 import {StyleSheet} from 'react-native';
@@ -13,11 +15,10 @@ const CalendarHomeScreen = () => {
   const currentMonthYear = getMonthYearDetails(new Date());
   const [monthYear, setMonthYear] = useState(currentMonthYear);
   const [selectedDate, setSelectedDate] = useState('');
-  const {data: posts} = useGetCalendarPosts(
-    monthYear.year,
-    monthYear.month,
-  );
+  const {data: posts} = useGetCalendarPosts(monthYear.year, monthYear.month);
   const navigation = useNavigation();
+  const {theme} = useThemeStore();
+  const styles = styling(theme);
 
   /** 월 변경 핸들러
    *
@@ -38,17 +39,16 @@ const CalendarHomeScreen = () => {
   const moveToToday = () => {
     setMonthYear(getMonthYearDetails(new Date()));
     setSelectedDate(getToday());
-  }
+  };
 
-  /**  
+  /**
    * 오늘 버튼 클릭 시 현재 날짜로 이동하는 오른쪽 네비게이션 버튼 추가
    */
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => <HeaderButton onPress={moveToToday} label="오늘" />,
-    })
-  }, [])
-  
+    });
+  }, []);
 
   /** 특정 년도의 특정 달에 선택한 캘린더 게시물 */
   const selectedPosts = useMemo(() => {
@@ -74,16 +74,17 @@ const CalendarHomeScreen = () => {
         onChangMonth={handleUpdateMonth}
       />
       {/* 선택한 날짜에 대한 post가 와야함 */}
-      <SelectedPostList posts={selectedPosts}/>
+      <SelectedPostList posts={selectedPosts} />
     </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.WHITE,
-  },
-});
+const styling = (theme: ThemeMode) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors[theme].WHITE,
+    },
+  });
 
 export default CalendarHomeScreen;

@@ -14,6 +14,7 @@ import DraweHeaderButton from '@/components/common/DraweHeaderButton';
 import SettingStackNavigator, {
   SettingStackParamList,
 } from '../stack/SettingStackNavigator';
+import useThemeStore from '@/store/useThemeStore';
 
 export type MainDrawerParamList = {
   [mainNavigations.HOME]: NavigatorScreenParams<MapStackParamList>;
@@ -24,6 +25,8 @@ export type MainDrawerParamList = {
 
 const Drawer = createDrawerNavigator<MainDrawerParamList>();
 const MainDrawerNavigator = () => {
+  const {theme} = useThemeStore();
+
   const DrawerIcon = (
     route: RouteProp<MainDrawerParamList>,
     focused: boolean,
@@ -45,7 +48,7 @@ const MainDrawerNavigator = () => {
       <MaterialIcons
         name={iconName}
         size={20}
-        color={focused ? colors.BLACK : colors.GRAY_500}
+        color={focused ? colors[theme].BLACK : colors[theme].GRAY_500}
       />
     ) : null;
   };
@@ -59,11 +62,11 @@ const MainDrawerNavigator = () => {
         drawerIcon: ({focused}) => DrawerIcon(route, focused),
         drawerStyle: {
           width: Dimensions.get('screen').width * 0.6,
-          backgroundColor: colors.WHITE,
+          backgroundColor: colors[theme].WHITE,
         },
         drawerActiveBackgroundColor: '#cfe7e8',
-        drawerActiveTintColor: colors.BLACK,
-        drawerInactiveTintColor: colors.GRAY_500,
+        drawerActiveTintColor: colors[theme].BLACK,
+        drawerInactiveTintColor: colors[theme].GRAY_500,
         drawerLabelStyle: {
           fontSize: 15,
           fontWeight: '600',

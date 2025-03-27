@@ -3,17 +3,25 @@ import React from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
 import DateBox from './DateBox';
 import {getDateFromHypenDate, getToday} from '@/utils/date';
+import useThemeStore from '@/store/useThemeStore';
+import {ThemeMode} from '@/types/common';
 
-interface DateListProps <T>{
+interface DateListProps<T> {
   dates: string[];
   selectedDate: string;
-  schedules: Record<number,T>;
+  schedules: Record<number, T>;
   handlePressDate: (date: string) => void;
 }
 
-const DateList = <T,>({dates, selectedDate,schedules, handlePressDate}: DateListProps<T>) => {
+const DateList = <T,>({
+  dates,
+  selectedDate,
+  schedules,
+  handlePressDate,
+}: DateListProps<T>) => {
   const today = getToday();
-  
+  const {theme} = useThemeStore();
+  const styles = styling(theme);
   return (
     <View style={styles.container}>
       <FlatList
@@ -22,27 +30,28 @@ const DateList = <T,>({dates, selectedDate,schedules, handlePressDate}: DateList
         keyExtractor={item => String(item)}
         renderItem={({item: date}) => {
           const extractDate = getDateFromHypenDate(date);
-          return(
+          return (
             <DateBox
               date={date}
               isToday={date === today}
-              hasSchedule={schedules ? (!!schedules[Number(extractDate)]) : false}
+              hasSchedule={schedules ? !!schedules[Number(extractDate)] : false}
               selectedDate={selectedDate}
               handlePressDate={handlePressDate}
-          />
-          )
+            />
+          );
         }}
       />
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: colors.GRAY_300,
-    backgroundColor: colors.GRAY_100,
-  },
-});
+const styling = (theme: ThemeMode) =>
+  StyleSheet.create({
+    container: {
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: colors[theme].GRAY_300,
+      backgroundColor: colors[theme].GRAY_100,
+    },
+  });
 
 export default DateList;
