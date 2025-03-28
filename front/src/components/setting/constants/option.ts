@@ -9,10 +9,12 @@ export type Item = {
 
 type SetingItemListProps = {
   openDarkModeModal: () => void;
+  openLegendModal: () => void;
 };
 
 export const settingItemList = ({
   openDarkModeModal,
+  openLegendModal,
 }: SetingItemListProps): Item[] => [
   {
     label: '프로필 수정',
@@ -24,7 +26,7 @@ export const settingItemList = ({
   },
   {
     label: '범례 표시',
-    path: settingNavigatons.EDIT_PROFILE,
+    callback: openLegendModal,
   },
   {
     label: '다크 모드',

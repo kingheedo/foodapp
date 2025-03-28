@@ -14,6 +14,7 @@ const queryKeys = {
 
 const storageKeys = {
   REFRESH_TOKEN: 'refreshToken',
-};
+  SHOW_LEGEND: 'showLegend',
+} as const;
 
 export {queryKeys, storageKeys};

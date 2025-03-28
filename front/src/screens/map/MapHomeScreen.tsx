@@ -28,6 +28,9 @@ import useLocationStore from '@/store/useLocationStore';
 import useThemeStore from '@/store/useThemeStore';
 import {ThemeMode} from '@/types/common';
 import getMapStyle from '@/styles/mapStyle';
+import MapLegend from '@/components/map/MapLegend';
+import useLegendStore from '@/store/useLegendStore';
+import useLegendStorage from '@/hooks/useLegendStorage';
 
 type Navigation = CompositeNavigationProp<
   StackNavigationProp<MapStackParamList>,
@@ -46,6 +49,7 @@ const MapHomeScreen = () => {
   const markerModal = useModal();
   usePermission(PermissionType.LOCATION);
   const {mapRef, moveMapView, handleDelta} = useMoveMapView();
+  const {showLegend} = useLegendStorage();
 
   /** 마커 길게 누를 시
    *
@@ -135,6 +139,8 @@ const MapHomeScreen = () => {
           <CustomMarker color="RED" coordinate={selectedLocation} />
         )}
       </MapView>
+
+      {showLegend && <MapLegend />}
 
       <MarkerModal
         markerId={markerId}

@@ -17,15 +17,19 @@ import {settingItemList} from '@/components/setting/constants/option';
 import useThemeStore from '@/store/useThemeStore';
 import {ThemeMode} from '@/types/common';
 import useThemeStorage from '@/hooks/useThemeStorage';
+import useLegendStorage from '@/hooks/useLegendStorage';
 interface SettingHomeScreenProps {}
 
 const SettingHomeScreen = ({}: SettingHomeScreenProps) => {
   const {logoutMutation} = useAuth();
   const darkModeModal = useModal();
+  const legendModal = useModal();
   const itemList = settingItemList({
     openDarkModeModal: darkModeModal.handleOpen,
+    openLegendModal: legendModal.handleOpen,
   });
   const {theme, isSystem, setMode, setSystem} = useThemeStorage();
+  const {showLegend, onChangeLegend} = useLegendStorage();
   const systemDefault = useColorScheme();
   const styles = styling(theme);
 
@@ -35,8 +39,6 @@ const SettingHomeScreen = ({}: SettingHomeScreenProps) => {
 
   const handleTheme = (theme: ThemeMode | boolean) => {
     if (typeof theme === 'boolean') {
-      console.log('theme', theme);
-
       setMode(systemDefault ?? 'light');
       setSystem(theme);
     } else {
@@ -44,6 +46,11 @@ const SettingHomeScreen = ({}: SettingHomeScreenProps) => {
       setSystem(false);
     }
     darkModeModal.handleClose();
+  };
+
+  const handleLegend = (legend: boolean) => {
+    onChangeLegend(legend);
+    legendModal.handleClose();
   };
 
   return (
@@ -79,6 +86,19 @@ const SettingHomeScreen = ({}: SettingHomeScreenProps) => {
           isChecked={isSystem}
           onPress={() => handleTheme(true)}
           label="시스템 환경 모드"
+        />
+      </OptionModal>
+
+      <OptionModal {...legendModal} btnLabel="취소">
+        <OptionModal.Button
+          isChecked={showLegend}
+          onPress={() => handleLegend(true)}
+          label="표시하기"
+        />
+        <OptionModal.Button
+          isChecked={!showLegend}
+          onPress={() => handleLegend(false)}
+          label="숨기기"
         />
       </OptionModal>
     </SafeAreaView>
