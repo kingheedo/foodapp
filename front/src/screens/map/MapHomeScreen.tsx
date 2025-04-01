@@ -1,10 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Alert, Pressable, StyleSheet, View} from 'react-native';
-import MapView, {
-  LatLng,
-  LongPressEvent,
-  PROVIDER_GOOGLE,
-} from 'react-native-maps';
+import MapView, {LongPressEvent, PROVIDER_GOOGLE} from 'react-native-maps';
 import {colors, mapNavigations} from '@/constants';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -29,8 +25,9 @@ import useThemeStore from '@/store/useThemeStore';
 import {ThemeMode} from '@/types/common';
 import getMapStyle from '@/styles/mapStyle';
 import MapLegend from '@/components/map/MapLegend';
-import useLegendStore from '@/store/useLegendStore';
 import useLegendStorage from '@/hooks/useLegendStorage';
+import MarkerFilterModal from '@/components/map/MarkerFilterModal';
+import useMarkerFilter from '@/hooks/useMarkerFilter';
 
 type Navigation = CompositeNavigationProp<
   StackNavigationProp<MapStackParamList>,
@@ -45,8 +42,12 @@ const MapHomeScreen = () => {
   const {userLocation, isLocationError} = useUserLocation();
   const {selectedLocation, setSelectedLocation} = useLocationStore();
   const [markerId, setMarkerId] = useState<number | null>(null);
-  const {data: markers = []} = useGetMarkers();
+  const markerFilter = useMarkerFilter();
+  const {data: getMarkers = []} = useGetMarkers({
+    select: markerFilter.transformMarker,
+  });
   const markerModal = useModal();
+  const filterModal = useModal();
   usePermission(PermissionType.LOCATION);
   const {mapRef, moveMapView, handleDelta} = useMoveMapView();
   const {showLegend} = useLegendStorage();
@@ -105,6 +106,10 @@ const MapHomeScreen = () => {
     navigation.navigate(mapNavigations.SEARCH_LOCATION);
   };
 
+  const handleFilterModal = () => {
+    filterModal.handleOpen();
+  };
+
   useEffect(() => {
     if (selectedLocation) {
       setSelectedLocation(selectedLocation);
@@ -127,7 +132,7 @@ const MapHomeScreen = () => {
         customMapStyle={getMapStyle(theme)}
         onLongPress={handleLongPressMapView}
         onRegionChangeComplete={handleDelta}>
-        {markers.map(({id, color, score, ...coordinate}) => (
+        {getMarkers.map(({id, color, score, ...coordinate}) => (
           <CustomMarker
             key={id}
             color={color}
@@ -148,6 +153,11 @@ const MapHomeScreen = () => {
         handleClose={markerModal.handleClose}
       />
 
+      <MarkerFilterModal
+        {...filterModal}
+        handleConfirm={() => filterModal.handleClose()}
+      />
+
       <Pressable
         style={[styles.drawerButton, {top: inset.top || 20}]}
         onPress={() => navigation.openDrawer()}>
@@ -159,6 +169,13 @@ const MapHomeScreen = () => {
         </Pressable>
         <Pressable style={styles.mapButton} onPress={handleSearch}>
           <Ionicons name="search" color={colors[theme].WHITE} size={25} />
+        </Pressable>
+        <Pressable style={styles.mapButton} onPress={handleFilterModal}>
+          <Ionicons
+            name="options-outline"
+            color={colors[theme].WHITE}
+            size={25}
+          />
         </Pressable>
         <Pressable style={styles.mapButton} onPress={handleselectedLocation}>
           <MaterialIcons

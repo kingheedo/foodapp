@@ -15,6 +15,7 @@ const queryKeys = {
 const storageKeys = {
   REFRESH_TOKEN: 'refreshToken',
   SHOW_LEGEND: 'showLegend',
+  MAKER_FILTER: 'MAKER_FILTER',
 } as const;
 
 export {queryKeys, storageKeys};
