@@ -23,6 +23,7 @@ import {Category, Profile} from '@/types/domain';
 const useSignup = (mutationOptions?: UseMutationCustomOptions) => {
   return useMutation({
     mutationFn: postSignup,
+    throwOnError: error => Number(error.response?.status) === 500,
     ...mutationOptions,
   });
 };
@@ -45,6 +46,7 @@ const useLogin = <T>(
         queryKey: [queryKeys.AUTH, queryKeys.GET_PROFILE],
       });
     },
+    throwOnError: error => Number(error.response?.status) === 500,
     ...mutationOptions,
   });
 };

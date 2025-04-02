@@ -6,6 +6,7 @@ import {
   UseInfiniteQueryOptions,
   QueryKey,
   InfiniteData,
+  useSuspenseInfiniteQuery,
 } from '@tanstack/react-query';
 
 const useGetInfinitePosts = (
@@ -18,13 +19,12 @@ const useGetInfinitePosts = (
     number
   >,
 ) => {
-  return useInfiniteQuery({
+  return useSuspenseInfiniteQuery({
     queryKey: [queryKeys.POST, queryKeys.GET_POSTS],
     queryFn: ({pageParam = 1}) => getPosts(pageParam),
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => {
       const lastPost = lastPage[lastPage.length - 1];
-
       return lastPost ? allPages.length + 1 : undefined;
     },
     ...options,
