@@ -7,10 +7,12 @@ import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnable
 import com.facebook.react.defaults.DefaultReactActivityDelegate
 import com.facebook.react.ReactRootView
 import com.swmansion.rnscreens.Screen
+import org.devio.rn.splashscreen.SplashScreen
 
 class MainActivity : ReactActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
+        SplashScreen.show(this)
         super.onCreate(null)
     }
 

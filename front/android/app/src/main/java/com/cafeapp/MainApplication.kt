@@ -12,6 +12,7 @@ import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.soloader.SoLoader
 import com.oblador.vectoricons.VectorIconsPackage
 import com.lugg.RNCConfig.RNCConfigPackage
+import org.devio.rn.splashscreen.SplashScreenReactPackage
 
 class MainApplication : Application(), ReactApplication {
 

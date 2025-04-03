@@ -74,7 +74,7 @@ const useLogout = (mutationOptions?: UseMutationCustomOptions) => {
 };
 
 const useGetRefreshToken = () => {
-  const {isSuccess, isError, data} = useQuery({
+  const {isSuccess, isError, isPending, data} = useQuery({
     queryKey: [queryKeys.AUTH, queryKeys.GET_ACCESS_TOKEN],
     queryFn: getAccessToken,
     staleTime: 1000 * 60 * 27, // 27분
@@ -97,7 +97,7 @@ const useGetRefreshToken = () => {
     }
   }, [isError]);
 
-  return {isSuccess, isError};
+  return {isSuccess, isError, isPending};
 };
 
 type CustomResponseProfile = {categories: Category} & Profile;
@@ -177,6 +177,7 @@ const useAuth = () => {
   const deleteAccountMutation = useDeleteAccount({
     onSuccess: () => logoutMutation.mutate(null),
   });
+  const isLoginLoading = getRefreshTokenQuery.isPending;
 
   return {
     signupMutation,
@@ -189,6 +190,7 @@ const useAuth = () => {
     getRefreshTokenQuery,
     getProfileQuery,
     updateCategory,
+    isLoginLoading,
   };
 };
 

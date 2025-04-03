@@ -34,6 +34,9 @@ local.properties
 *.keystore
 !debug.keystore
 
+# Gradle properties
+gradle.properties
+
 # node.js
 #
 node_modules/
