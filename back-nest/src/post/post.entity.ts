@@ -4,6 +4,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -11,6 +12,7 @@ import {
 import { MarkerColor } from './marker-color.enum';
 import { ColumnNumericTransformer } from 'src/common/transformers/numeric.trasnformer';
 import { Image } from 'src/image/image.entity';
+import { User } from 'src/user/user.entity';
 
 @Entity()
 export class Post extends BaseEntity {
@@ -67,4 +69,7 @@ export class Post extends BaseEntity {
 
   @OneToMany(() => Image, (image) => image.post, { cascade: true })
   images: Image[];
+
+  @ManyToOne(() => User, (user) => user.posts)
+  user: User;
 }
