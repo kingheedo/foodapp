@@ -1,25 +1,35 @@
-import { Injectable } from '@nestjs/common';
-
-export type User = any;
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from './user.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class UserService {
-  constructor() {}
-
-  private readonly users = [
-    {
-      userId: 1,
-      email: 'dhkdgmleh@gmail.com',
-      password: 'eh5403',
-    },
-    {
-      userId: 2,
-      email: 'maria',
-      password: 'guess',
-    },
-  ];
+  constructor(
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+  ) {}
 
   async findOne(email: string) {
-    return this.users.find((user) => user.email === email);
+    try {
+      const user = await this.userRepository.findOne({
+        where: {
+          email,
+        },
+      });
+
+      if (!user) {
+        throw new NotFoundException('유저가 존재하지 않습니다.');
+      }
+      return user;
+    } catch {
+      throw new InternalServerErrorException(
+        '유저 정보를 찾는중 에러가 발생하였습니다.',
+      );
+    }
   }
 }

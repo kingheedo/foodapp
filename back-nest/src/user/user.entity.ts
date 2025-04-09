@@ -25,29 +25,45 @@ export class User extends BaseEntity {
   @Column()
   password: string;
 
-  @Column()
-  nickname: string;
+  @Column({
+    nullable: true,
+  })
+  nickname?: string;
 
-  @Column()
-  imageUri: string;
+  @Column({
+    nullable: true,
+  })
+  imageUri?: string;
 
-  @Column()
-  kakaoImageUri: string;
+  @Column({
+    nullable: true,
+  })
+  kakaoImageUri?: string;
 
-  @Column()
-  [MarkerColor.RED]: string;
+  @Column({
+    nullable: true,
+  })
+  [MarkerColor.RED]?: string;
 
-  @Column()
-  [MarkerColor.BLUE]: string;
+  @Column({
+    nullable: true,
+  })
+  [MarkerColor.BLUE]?: string;
 
-  @Column()
-  [MarkerColor.YELLOW]: string;
+  @Column({
+    nullable: true,
+  })
+  [MarkerColor.YELLOW]?: string;
 
-  @Column()
-  [MarkerColor.GREEN]: string;
+  @Column({
+    nullable: true,
+  })
+  [MarkerColor.GREEN]?: string;
 
-  @Column()
-  [MarkerColor.PURPLE]: string;
+  @Column({
+    nullable: true,
+  })
+  [MarkerColor.PURPLE]?: string;
 
   @CreateDateColumn({
     type: 'timestamp with time zone',

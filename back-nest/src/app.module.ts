@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostModule } from './post/post.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
+import { FavoriteModule } from './favorite/favorite.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { UserModule } from './user/user.module';
     PostModule,
     AuthModule,
     UserModule,
+    FavoriteModule,
   ],
   controllers: [AppController],
   providers: [AppService],
