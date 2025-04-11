@@ -173,4 +173,21 @@ export class PostService {
       );
     }
   }
+
+  async getSearchPosts(query: string) {
+    try {
+      const searchPosts = await this.postRepository
+        .createQueryBuilder('post')
+        .where('post.title ILIKE :query', { query: `%${query}%` })
+        .orWhere('post.description ILIKE :query', { query: `%${query}%` })
+        .getMany();
+
+      return searchPosts;
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException(
+        '피드 검색 도중 에러가 발생하였습니다.',
+      );
+    }
+  }
 }

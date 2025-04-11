@@ -8,12 +8,14 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller()
 export class PostController {
@@ -27,6 +29,12 @@ export class PostController {
   @Get('/posts/:id')
   getPostById(@Param('id', ParseIntPipe) id: number) {
     return this.postService.getPostById(id);
+  }
+
+  @Get('/posts/my/search')
+  @UseGuards(AuthGuard)
+  getSearchPosts(@Query('query') query: string) {
+    return this.postService.getSearchPosts(query);
   }
 
   @Get('/markers')

@@ -12,7 +12,7 @@ import { User } from 'src/user/user.entity';
     JwtModule.register({
       global: true,
       secret: jwtContants.secret,
-      signOptions: { expiresIn: '60s' },
+      signOptions: { expiresIn: '3600s' },
     }),
   ],
   controllers: [AuthController],
