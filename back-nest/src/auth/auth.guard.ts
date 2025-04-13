@@ -5,13 +5,19 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Request } from 'express';
 import jwtContants from 'src/constants/jwt.constants';
 import { User } from 'src/user/user.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private jwtService: JwtService) {}
+  constructor(
+    private jwtService: JwtService,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
@@ -22,13 +28,18 @@ export class AuthGuard implements CanActivate {
     }
 
     try {
-      const payload = await this.jwtService.verifyAsync<
-        Pick<User, 'id' | 'email'>
-      >(token, {
-        secret: jwtContants.secret,
+      const payload = await this.jwtService.verifyAsync<Pick<User, 'id'>>(
+        token,
+        {
+          secret: jwtContants.secret,
+        },
+      );
+
+      const user = await this.userRepository.findOne({
+        where: { id: payload.id },
       });
 
-      request['user'] = payload;
+      request['user'] = user;
     } catch {
       throw new UnauthorizedException('유효하지 않은 토큰입니다.');
     }

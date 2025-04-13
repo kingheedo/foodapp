@@ -65,17 +65,20 @@ export class User extends BaseEntity {
   })
   [MarkerColor.PURPLE]?: string;
 
+  @Column({ nullable: true })
+  hashedRefreshToken?: string;
+
   @CreateDateColumn({
     type: 'timestamp with time zone',
     default: () => 'CURRENT_TIMESTAMP',
   })
-  createdAt: Date | null;
+  createdAt: Date;
 
   @UpdateDateColumn({
     type: 'timestamp with time zone',
     default: () => 'CURRENT_TIMESTAMP',
   })
-  updatedAt: Date | null;
+  updatedAt: Date;
 
   @DeleteDateColumn({
     type: 'timestamp with time zone',

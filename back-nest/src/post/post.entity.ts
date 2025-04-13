@@ -53,13 +53,13 @@ export class Post extends BaseEntity {
     type: 'timestamp with time zone',
     default: () => 'CURRENT_TIMESTAMP',
   })
-  createdAt: Date | null;
+  createdAt: Date;
 
   @UpdateDateColumn({
     type: 'timestamp with time zone',
     default: () => 'CURRENT_TIMESTAMP',
   })
-  updatedAt: Date | null;
+  updatedAt: Date;
 
   @DeleteDateColumn({
     type: 'timestamp with time zone',

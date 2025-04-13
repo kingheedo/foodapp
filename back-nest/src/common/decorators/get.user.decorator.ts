@@ -6,7 +6,7 @@ interface AuthRequest extends Request {
   user: Pick<UserEntity, 'id' | 'email'>;
 }
 
-export const User = createParamDecorator(
+export const GetUser = createParamDecorator(
   (data: keyof Pick<UserEntity, 'id' | 'email'>, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest<AuthRequest>();
     const user = request.user;
