@@ -7,7 +7,6 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Request } from 'express';
-import jwtContants from 'src/constants/jwt.constants';
 import { User } from 'src/user/user.entity';
 import { Repository } from 'typeorm';
 
@@ -28,12 +27,8 @@ export class AuthGuard implements CanActivate {
     }
 
     try {
-      const payload = await this.jwtService.verifyAsync<Pick<User, 'id'>>(
-        token,
-        {
-          secret: jwtContants.secret,
-        },
-      );
+      const payload =
+        await this.jwtService.verifyAsync<Pick<User, 'id'>>(token);
 
       const user = await this.userRepository.findOne({
         where: { id: payload.id },
